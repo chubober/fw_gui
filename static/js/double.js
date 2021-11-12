@@ -28,7 +28,7 @@ $('#sections').on('click', '.remove', function() {
     //fade out section
     $(this).parent().fadeOut(1, function(){
         //remove parent element (main section)
-        $(this).parent().empty();
+        $(this).parent().remove();
         sectionsCount--;
         return false;
     });
