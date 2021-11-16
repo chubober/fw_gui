@@ -1,5 +1,6 @@
 import pandas as pd
 from search import find_evth
+from dl_insert_data import main, save_to_db
 # import gspread
 from sqlalchemy import func
 from sqlalchemy import create_engine
@@ -9,11 +10,12 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from ordered_set import OrderedSet as ordset
 from flask import Flask, render_template, request, redirect, url_for
+from werkzeug.utils import secure_filename
 # from oauth2client.service_account import ServiceAccountCredentials
 
 app = Flask(__name__)
 
-engine = create_engine('postgresql+psycopg2://lingvist:lingvistpassword@127.0.0.1:5432/mydatabase')
+engine = create_engine('postgresql+psycopg2://lingvist:lingvistpassword@178.154.193.115:5432/mydatabase')
 
 Base = declarative_base()
 
@@ -94,6 +96,7 @@ def dicter(records):
 
 @app.route('/')
 def main_page():
+    
     Base.metadata.create_all(engine)
 
     Session = sessionmaker(bind=engine)
@@ -110,6 +113,8 @@ def main_page():
                            subjs=subjs, objs=objs,
                            verbs=verbs, wos=wos)
 
+    
+    return render_template('index.html')
 
 @app.route('/result', methods=['get'])
 def result():
@@ -133,6 +138,26 @@ def result():
     return render_template('result.html', results=res_dicts,
                            isinst=isinstance, lst=list)
 
+@app.route('/upload')
+def upload():
+    return (render_template('upload.html'))
+
+@app.route('/res_corp', methods=['post'])
+def res_corp():
+    if request.method == 'POST':
+        file = request.files['filename']
+    if file:
+        filename = secure_filename(file.filename)
+        #file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        #a = 'file uploaded'
+        file.save(file.filename)
+        #test = pd.read_excel(filename, sheet_name = "Лист1",  na_values = "", keep_default_na = False)
+        res = main(file.filename)
+        
+
+    return redirect(url_for('main_page'))
+    #render_template('index.html')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=80)
+
