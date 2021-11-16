@@ -43,7 +43,7 @@ def chunker(req_dict, n):
     count = 0
     for k, v in req_dict.items():
         k = ''.join(filter(str.isalpha, k))
-        if len(v) == 1 and k not in ['source', 'subj', 'obj', 'verb', 'wo']:
+        if len(v) == 1 and k not in ['text', 'subj', 'obj', 'verb', 'wo']:
             v = v[0]
         req_dicts[dict_num][k] = v
         if count < n-1:
@@ -113,9 +113,9 @@ def main_page():
 
 @app.route('/result', methods=['get'])
 def result():
-    # Base.metadata.create_all(engine)
-    # Session = sessionmaker(bind=engine)
-    # session = Session()
+    Base.metadata.create_all(engine)
+    Session = sessionmaker(bind=engine)
+    session = Session()
 
     req_dict = request.args.to_dict(flat=False)
     req_dicts = chunker(req_dict, 7)
@@ -123,9 +123,10 @@ def result():
     # results = search_by_parameters(session, req_dicts)
     # session.close()
 
-    print(req_dicts)
+    query = find_evth(req_dicts)
 
-    results = find_evth(req_dicts)
+    with engine.connect() as con:
+        results = con.execute(query)
 
     res_dicts = dicter(results)
 

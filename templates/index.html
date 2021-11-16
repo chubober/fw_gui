@@ -46,21 +46,21 @@
       <div class="form-row">
           <div class="form-group">
               <label>clause</label>
-              <input class="form-control" name="word" list="clause" id="main input">
+              <input class="form-control" name="clause" list="clause" id="main input">
           </div>
       </div>
 
       <div class="form-row">
           <div class="form-group">
               <label>translation</label>
-              <input class="form-control" name="trans" list="tr" id="translation">
+              <input class="form-control" name="tr" list="tr" id="translation">
           </div>
       </div>
 
       <div class="form-row">
           <div class="form-group">
               <label>sources</label>
-              <select required multiple id="sources" name="source">
+              <select required multiple id="sources" name="text">
                   {% for text in texts %}
                   <option selected value="{{ text }}">{{ text }}</option>
                   {% endfor %}

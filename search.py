@@ -10,15 +10,15 @@ from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 # from sqlalchemy import create_engine
 '''
 cards = [{
-        "word": "щас|r'izan'-cə|er'a-tamə|.",
-        "trans": "",
-        "source": "",
+        "clause": "щас|r'izan'-cə|er'a-tamə|.",
+        "tr": "",
+        "text": "",
         "wo": ["LOC V", 'V'],
         "subj": "pro-1", "obj": "ns", "verb":""
     }, {
-        "word": "",
-        "trans": "работала",
-        "source": "",
+        "clause": "",
+        "tr": "работала",
+        "text": "",
         "wo": "",
         "subj": ['pro-1', 'ns', 'pro1pl'], "obj": "", "verb": ""
     }]
@@ -29,15 +29,23 @@ def find_evth(cards):
   '''
   Поиск по карточкам
   '''
+
+  # connection = psycopg2.connect(user="lingvist",
+  #                                   password="lingvistpassword",
+  #                                   host="178.154.193.115",
+  #                                   port="5432",
+  #                                   database="mydatabase")
+  # cursor = connection.cursor()
+
   query = f"""select * from data """
 
   for card_ix, card in enumerate(cards):
-    #print(card_ix, card)
+    # print(card_ix, card)
     where = ""
     for key, value in card.items():
       if value == "":
         continue
-      if key == 'word' or key == 'trans':
+      if key == 'clause' or key == 'tr':
         new_val = "lower("+key+")" + " like lower('%" + replace_quot_sql(value) + "%')"
       elif type(value) is list:
         new_val = ""
@@ -61,13 +69,14 @@ def find_evth(cards):
     if where != "":
       query += where
 
-    #print(query)
+    # print(query)
 
-  cursor.execute(query)
-  res = cursor.fetchall()
-  cursor.close()
-  connection.close()
-  return res
+  # cursor.execute(query)
+  # res = cursor.fetchall()
+  # cursor.close()
+  # connection.close()
+  # return res
+  return query
 
 def replace_quot_sql(t):
   return str(t.replace("'", "''"))
