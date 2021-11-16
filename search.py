@@ -1,39 +1,40 @@
-import gspread
-import httplib2
-import apiclient.discovery
-from oauth2client.service_account import ServiceAccountCredentials
-import pandas as pd
-import sqlalchemy
+# import gspread
+# import httplib2
+# import apiclient.discovery
+# from oauth2client.service_account import ServiceAccountCredentials
+# import pandas as pd
+# import sqlalchemy
 import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 
-from sqlalchemy import create_engine
+# from sqlalchemy import create_engine
 
 cards = [{
-        "clause": "щас|r'izan'-cə|er'a-tamə|.",
-        "tr": "",
-        "text": "",
+        "word": "щас|r'izan'-cə|er'a-tamə|.",
+        "trans": "",
+        "source": "",
         "wo": ["LOC V", 'V'],
         "subj": "pro-1", "obj": "ns", "verb":""
     }, {
-        "clause": "",
-        "tr": "работала",
-        "text": "",
+        "word": "",
+        "trans": "работала",
+        "source": "",
         "wo": "",
         "subj": ['pro-1', 'ns', 'pro1pl'], "obj": "", "verb": ""
     }]
 
-connection = psycopg2.connect(user="lingvist",
-                                    password="lingvistpassword",
-                                    host="178.154.193.115",
-                                    port="5432",
-                                    database="mydatabase")
-cursor = connection.cursor()
 
 def find_evth(cards):
   '''
   Поиск по карточкам
   '''
+  connection = psycopg2.connect(user="lingvist",
+                                    password="lingvistpassword",
+                                    host="178.154.193.115",
+                                    port="5432",
+                                    database="mydatabase")
+
+  cursor = connection.cursor()
   query = f"""select * from data """
 
   for card_ix, card in enumerate(cards):
@@ -42,7 +43,7 @@ def find_evth(cards):
     for key, value in card.items():
       if value == "":
         continue
-      if key == 'clause' or key == 'tr':
+      if key == 'word' or key == 'trans':
         new_val = "lower("+key+")" + " like lower('%" + value.replace("'", "''") + "%')"
       elif type(value) is list:
         new_val = ""

@@ -1,4 +1,5 @@
 import pandas as pd
+from search import find_evth
 # import gspread
 from sqlalchemy import func
 from sqlalchemy import create_engine
@@ -53,26 +54,26 @@ def chunker(req_dict, n):
     return req_dicts
 
 
-def search_by_parameters(db_session, req_dicts):
-    res_set = ordset()
-    for d in req_dicts:
-        # all_texts = list(set(x.text for x in db_session.query(DF).all() if x))
-        # if not texts:
-        #     texts = all_texts
+# def search_by_parameters(db_session, req_dicts):
+#     res_set = ordset()
+#     for d in req_dicts:
+#         # all_texts = list(set(x.text for x in db_session.query(DF).all() if x))
+#         # if not texts:
+#         #     texts = all_texts
 
-        new_query = db_session.query(DF)
+#         new_query = db_session.query(DF)
 
-        records = new_query.filter(DF.text.in_(d['source']),
-                                  func.lower(DF.clause).contains(d['word']),
-                                  func.lower(DF.tr).contains(d['trans']),
-                                  DF.subj.in_(d['subj']),
-                                  DF.obj.in_(d['obj']),
-                                  DF.verb.in_(d['verb']),
-                                  DF.wo.in_(d['wo']),
-                                  ).all()
+#         records = new_query.filter(DF.text.in_(d['source']),
+#                                   func.lower(DF.clause).contains(d['word']),
+#                                   func.lower(DF.tr).contains(d['trans']),
+#                                   DF.subj.in_(d['subj']),
+#                                   DF.obj.in_(d['obj']),
+#                                   DF.verb.in_(d['verb']),
+#                                   DF.wo.in_(d['wo']),
+#                                   ).all()
 
-        res_set.update(list(records))
-    return list(res_set)
+#         res_set.update(list(records))
+#     return list(res_set)
 
 
 def dicter(records):
@@ -112,17 +113,19 @@ def main_page():
 
 @app.route('/result', methods=['get'])
 def result():
-    Base.metadata.create_all(engine)
-
-    Session = sessionmaker(bind=engine)
-    session = Session()
+    # Base.metadata.create_all(engine)
+    # Session = sessionmaker(bind=engine)
+    # session = Session()
 
     req_dict = request.args.to_dict(flat=False)
     req_dicts = chunker(req_dict, 7)
 
-    results = search_by_parameters(session, req_dicts)
+    # results = search_by_parameters(session, req_dicts)
+    # session.close()
 
-    session.close()
+    print(req_dicts)
+
+    results = find_evth(req_dicts)
 
     res_dicts = dicter(results)
 
