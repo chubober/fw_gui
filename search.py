@@ -37,7 +37,7 @@ def find_evth(cards):
     for key, value in card.items():
       if value == "":
         continue
-      if key == 'clause' or key == 'tr':
+      if key == 'word' or key == 'trans':
         new_val = "lower("+key+")" + " like lower('%" + replace_quot_sql(value) + "%')"
       elif type(value) is list:
         new_val = ""
