@@ -33,9 +33,7 @@
   {% else %}
   {% for result in results %}
   <div class="card">
-    <div class="container">
-        <h3> {{ result['id'] }} </h3>
-    </div>
+    <h3 class="card-header"> {{ result['id'] }} </h3>
   {% for key in result %}
   {% if result[key] and result[key] != [''] %}
   {% if key == 'id' %}

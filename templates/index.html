@@ -37,77 +37,67 @@
   </nav>
 
   <!-- Page Content -->
-<form action="/result" target="_blank" method="GET" autocomplete="off" class="container-fluid mt-xl">
-  <div id="sections" class="row flex-row flex-nowrap">
-    <div class="col col-md-4 section card">
+<form action="/result" target="_blank" method="GET" autocomplete="off" class="container-fluid mt-xl-4">
+  <div id="sections" class="row flex-row flex-nowrap scroll">
+    <div class="col col-md-4 section card pt-xl-3">
 
       <div class="form-row">
-          <div class="form-group">
+          <div class="form-group col-md-6">
               <label>clause</label>
               <input class="form-control" name="clause" list="clause" id="main input">
           </div>
-      </div>
-
-      <div class="form-row">
-          <div class="form-group">
+      
+          <div class="form-group col-md-6">
               <label>translation</label>
               <input class="form-control" name="tr" list="tr" id="translation">
           </div>
       </div>
 
-      <div class="form-row">
-          <div class="form-group">
-              <label>sources</label>
-              <select required multiple id="sources" name="text">
-                  {% for text in texts %}
-                  <option selected value="{{ text }}">{{ text }}</option>
-                  {% endfor %}
-              </select>
-          </div>
+      <div class="form-group">
+          <label>sources</label>
+          <select required multiple class="custom-select" id="sources" name="text">
+              {% for text in texts %}
+              <option selected value="{{ text }}">{{ text }}</option>
+              {% endfor %}
+          </select>
       </div>
 
       <div class="form-row">
-          <div class="form-group">
-              <label>subject expression</label>
-              <select required multiple id="subj" name="subj">
+          <div class="form-group col-md-4">
+              <label>subject</label>
+              <select required multiple class="custom-select" id="subj" name="subj" size="3">
                   {% for subj in subjs %}
                   <option selected value="{{ subj }}">{{ subj }}</option>
                   {% endfor %}
               </select>
           </div>
+
+          <div class="form-group col-md-4">
+              <label>verb</label>
+              <select required multiple class="custom-select" id="verb" name="verb" size="3">
+                  {% for verb in verbs %}
+                  <option selected value="{{ verb }}">{{ verb }}</option>
+                  {% endfor %}
+              </select>
+          </div>
+      
+          <div class="form-group col-md-4">
+              <label>object</label>
+              <select required multiple class="custom-select" id="obj" name="obj" size="3">
+                  {% for obj in objs %}
+                  <option selected value="{{ obj }}">{{ obj }}</option>
+                  {% endfor %}
+              </select>
+          </div>
       </div>
 
-      <div class="form-row">
-        <div class="form-group">
-            <label>object expression</label>
-            <select required multiple id="obj" name="obj">
-                {% for obj in objs %}
-                <option selected value="{{ obj }}">{{ obj }}</option>
-                {% endfor %}
-            </select>
-        </div>
-      </div>
-
-      <div class="form-row">
-        <div class="form-group">
-            <label>verb</label>
-            <select required multiple id="verb" name="verb">
-                {% for verb in verbs %}
-                <option selected value="{{ verb }}">{{ verb }}</option>
-                {% endfor %}
-            </select>
-        </div>
-      </div>
-
-      <div class="form-row">
-        <div class="form-group">
-            <label>word order</label>
-            <select required multiple id="wo" name="wo">
-                {% for wo in wos %}
-                <option selected value="{{ wo }}">{{ wo }}</option>
-                {% endfor %}
-            </select>
-        </div>
+      <div class="form-group">
+          <label>word order</label>
+          <select required multiple class="custom-select" id="wo" name="wo" size="3">
+              {% for wo in wos %}
+              <option selected value="{{ wo }}">{{ wo }}</option>
+              {% endfor %}
+          </select>
       </div>
 
       <div class="form-group">
@@ -117,7 +107,7 @@
     </div>
   </div>
 
-    <div class="form-group float-left">
+    <div class="form-group float-left mt-xl-4">
       <button type="button" class="btn btn-success addsection">add section</button>
       <button type="submit" class="btn btn-primary">search</button>
     </div>
