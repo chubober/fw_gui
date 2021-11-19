@@ -16,10 +16,11 @@ $('body').on('click', '.addsection', function() {
         //update id
         this.name = this.name + sectionsCount;
 
-    }).end()
+    }).end();
 
-    //inject new section
-    .appendTo('#sections');
+    section.find('.bootstrap-select').replaceWith(function() { return $('select', this); });
+    section.find('.selectpicker').selectpicker();
+    section.appendTo('#sections');
     return false;
 });
 

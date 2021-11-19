@@ -109,12 +109,10 @@ def main_page():
     verbs = sorted(list(set(x.verb for x in recs if x)))
     wos = sorted(list(set(x.wo for x in recs if x)))
     session.close()
-    return render_template('index.html', texts=texts, 
+    return render_template('index.html', texts=texts,
                            subjs=subjs, objs=objs,
                            verbs=verbs, wos=wos)
 
-    
-    return render_template('index.html')
 
 @app.route('/result', methods=['get'])
 def result():
