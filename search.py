@@ -30,13 +30,6 @@ def find_evth(cards):
   Поиск по карточкам
   '''
 
-  # connection = psycopg2.connect(user="lingvist",
-  #                                   password="lingvistpassword",
-  #                                   host="178.154.193.115",
-  #                                   port="5432",
-  #                                   database="mydatabase")
-  # cursor = connection.cursor()
-
   query = f"""select * from data """
 
   for card_ix, card in enumerate(cards):
@@ -46,7 +39,7 @@ def find_evth(cards):
       if value == "":
         continue
       if key == 'clause' or key == 'tr':
-        new_val = "lower("+key+")" + " like lower('%" + replace_quot_sql(value) + "%')"
+        new_val = "lower("+key+")" + " like lower('%%" + replace_quot_sql(value) + "%%')"
       elif type(value) is list:
         new_val = ""
         for elem_ix, elem in enumerate(value):
@@ -69,13 +62,7 @@ def find_evth(cards):
     if where != "":
       query += where
 
-    # print(query)
 
-  # cursor.execute(query)
-  # res = cursor.fetchall()
-  # cursor.close()
-  # connection.close()
-  # return res
   return query
 
 def replace_quot_sql(t):
