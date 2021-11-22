@@ -9,16 +9,11 @@
   <meta name="author" content="">
 
   <title>FW GUI</title>
-
     <link rel="stylesheet" href="/static/css/bootstrap-4.5.2.min.css" type="text/css">
 
-    <script type="text/javascript" src="/static/js/jquery-2.2.4.min.js"></script>
-    <script type="text/javascript" src="/static/js/bootstrap.bundle-4.5.2.min.js"></script>
-    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
 
-    <!-- Latest compiled and minified JavaScript -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
 
     <link rel="stylesheet" href="/static/css/boxit.css" type="text/css">
     <link rel="stylesheet" href="/static/css/styles.css" type="text/css">
@@ -31,6 +26,7 @@
   <!-- Navigation -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
     <div class="container">
+<<<<<<< HEAD
       <a class="navbar-brand" href="#">FW GUI</a>
 
       <a class="navbar-brand" href="upload">Download data</a>
@@ -40,81 +36,76 @@
         </div>
         <span class="navbar-toggler-icon"></span>
       </button>
+=======
+      <a class="navbar-brand" href="/">FW GUI</a>
+      <a class="navbar-brand" href="upload">Upload data</a>
+>>>>>>> 92860cf9db9fdc5cebc8aa949f468dd27e435c3e
     </div>
   </nav>
 
+
   <!-- Page Content -->
-<form action="/result" target="_blank" method="GET" autocomplete="off" class="container-fluid">
-  <div id="sections" class="row flex-row flex-nowrap">
-    <div class="col col-md-4 section card">
+<form action="/result" target="_blank" method="GET" autocomplete="off" class="container-fluid mt-xl-4">
+  <div id="sections" class="row flex-row flex-nowrap scroll">
+    <div class="col col-md-4 col-12 section card pt-xl-3">
 
       <div class="form-row">
-          <div class="form-group">
+          <div class="form-group col-md-6">
               <label>clause</label>
               <input class="form-control" name="clause" list="clause" id="main input">
           </div>
-      </div>
-
-      <div class="form-row">
-          <div class="form-group">
+      
+          <div class="form-group col-md-6">
               <label>translation</label>
               <input class="form-control" name="tr" list="tr" id="translation">
           </div>
       </div>
 
-      <div class="form-row">
-          <div class="form-group">
-              <label>sources</label>
-              <select required multiple id="sources" name="text">
-                  {% for text in texts %}
-                  <option selected value="{{ text }}">{{ text }}</option>
-                  {% endfor %}
-              </select>
-          </div>
+      <div class="form-group">
+          <label>sources</label>
+          <select required multiple class="selectpicker" data-actions-box="true" tabindex="-98" name="text" multiple data-selected-text-format="count" data-width="fit" data-container="body">
+              {% for text in texts %}
+              <option selected value="{{ text }}">{{ text }}</option>
+              {% endfor %}
+          </select>
       </div>
 
       <div class="form-row">
-          <div class="form-group">
-              <label>subject expression</label>
-              <select required multiple id="subj" name="subj">
+          <div class="form-group col-md-4">
+              <label>subject</label>
+              <select required multiple class="selectpicker" id="subj" name="subj" data-actions-box="true" tabindex="-98" name="text" multiple data-selected-text-format="count" data-width="fit" data-container="body">
                   {% for subj in subjs %}
                   <option selected value="{{ subj }}">{{ subj }}</option>
                   {% endfor %}
               </select>
           </div>
+
+          <div class="form-group col-md-4">
+              <label>verb</label>
+              <select required multiple class="selectpicker" id="verb" name="verb" data-actions-box="true" tabindex="-98" name="text" multiple data-selected-text-format="count" data-width="fit" data-container="body">
+                  {% for verb in verbs %}
+                  <option selected value="{{ verb }}">{{ verb }}</option>
+                  {% endfor %}
+              </select>
+          </div>
+      
+          <div class="form-group col-md-4">
+              <label>object</label>
+              <select required multiple class="selectpicker" id="obj" name="obj" data-actions-box="true" tabindex="-98" name="text" multiple data-selected-text-format="count" data-width="fit" data-container="body">
+                  {% for obj in objs %}
+                  <option selected value="{{ obj }}">{{ obj }}</option>
+                  {% endfor %}
+              </select>
+          </div>
       </div>
 
-      <div class="form-row">
-        <div class="form-group">
-            <label>object expression</label>
-            <select required multiple id="obj" name="obj">
-                {% for obj in objs %}
-                <option selected value="{{ obj }}">{{ obj }}</option>
-                {% endfor %}
-            </select>
-        </div>
-      </div>
-
-      <div class="form-row">
-        <div class="form-group">
-            <label>verb</label>
-            <select required multiple id="verb" name="verb">
-                {% for verb in verbs %}
-                <option selected value="{{ verb }}">{{ verb }}</option>
-                {% endfor %}
-            </select>
-        </div>
-      </div>
-
-      <div class="form-row">
-        <div class="form-group">
-            <label>word order</label>
-            <select required multiple id="wo" name="wo">
-                {% for wo in wos %}
-                <option selected value="{{ wo }}">{{ wo }}</option>
-                {% endfor %}
-            </select>
-        </div>
+      <div class="form-group">
+          <label>word order</label>
+          <select required multiple class="selectpicker" id="wo" name="wo" data-actions-box="true" tabindex="-98" name="text" multiple data-selected-text-format="count" data-width="fit" data-container="body">
+              {% for wo in wos %}
+              <option selected value="{{ wo }}">{{ wo }}</option>
+              {% endfor %}
+          </select>
       </div>
 
       <div class="form-group">
@@ -124,16 +115,19 @@
     </div>
   </div>
 
-    <div class="form-group float-right">
-      <button type="button" class="btn btn-success addsection">add section</button>
-      <button type="submit" class="btn btn-primary">search</button>
+    <div class="form-group row justify-content-around fixed-bottom mt-xl-4">
+      <button type="button" class="btn btn-primary addsection">add section</button>
+      <button type="submit" class="btn btn-success">search</button>
     </div>
 
 </form>
 
   <!-- Initialize the plugin: -->
-  <script src="/static/js/jquery.js"></script>
-  <script src="/static/js/double.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
+  <script  src="/static/js/double.js" crossorigin></script>
 
 </body>
 
