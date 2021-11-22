@@ -8,7 +8,7 @@ import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 
 # from sqlalchemy import create_engine
-'''
+
 cards = [{
         "clause": "щас|r'izan'-cə|er'a-tamə|.",
         "tr": "",
@@ -23,7 +23,7 @@ cards = [{
         "subj": ['pro-1', 'ns', 'pro1pl'], "obj": "", "verb": ""
     }]
 
-'''
+
 
 def find_evth(cards):
   '''

@@ -5,3 +5,34 @@
 .scroll {
     overflow: auto;
 }
+.amount {
+    background-color: #A9CCE3;
+    border-left: 6px solid #21618C;
+    color: #2E4053;
+    padding: 20px 30px;
+    font-family: 'Lato', sans-serif;
+    font-size: 20px;
+    vertical-align: middle;
+}
+
+}
+.flash{
+  padding:10px;
+}
+.flash.success{
+  border-left: 6px solid #0B5345 ;
+  background-color: #A9DFBF;
+  padding: 15px 25px;
+  font-family: 'Lato', sans-serif;
+  font-size: 20px;
+  vertical-align: middle;
+}
+.flash.error{
+  border-left: 6px solid #641E16;
+  background-color: #FADBD8;
+  color: #641E16;
+  padding: 15px 25px;
+  font-family: 'Lato', sans-serif;
+  font-size: 20px;
+  vertical-align: middle;
+}
