@@ -49,19 +49,16 @@
           </div>
       </div>
 
-      <div class="form-row">
-          <div class="form-group col-md-6">
-
-
       <div class="form-group">
           <label>sources</label>
           <select required multiple class="selectpicker" data-actions-box="true" tabindex="-98" name="text" multiple data-selected-text-format="count" data-width="fit" data-container="body">
               {% for text in texts %}
-              {% if text == '' %}
+	      {% if text == '' %}
               <option selected value="{{ text }}">Не размечено</option>
               {% else %}
               <option selected value="{{ text }}">{{ text }}</option>
               {% endif %}
+         
               {% endfor %}
           </select>
       </div>
@@ -72,12 +69,13 @@
               <select required multiple class="selectpicker" id="subj" name="subj" data-actions-box="true" tabindex="-98" name="text" multiple data-selected-text-format="count" data-width="fit" data-container="body">
                   {% for subj in subjs %}
                   {% if subj == '' %}
-                  <option selected value="{{ subj }}">Не размечено</option>
-                  {% else %}
-                  <option selected value="{{ subj }}">{{ subj }}</option>
-                  {% endif %}
+		      <option selected value="{{ subj }}">Не размечено</option>
+		  {% else %}
+		      <option selected value="{{ subj }}">{{ subj }}</option>
+		  {% endif %}
                   {% endfor %}
-	 </div>
+              </select>
+          </div>
 
           <div class="form-group col-md-4">
               <label>verb</label>
@@ -89,8 +87,9 @@
                   <option selected value="{{ verb }}">{{ verb }}</option>
                   {% endif %}
                   {% endfor %}
-	  </div>
-
+              </select>
+          </div>
+      
           <div class="form-group col-md-4">
               <label>object</label>
               <select required multiple class="selectpicker" id="obj" name="obj" data-actions-box="true" tabindex="-98" name="text" multiple data-selected-text-format="count" data-width="fit" data-container="body">
@@ -101,8 +100,9 @@
                   <option selected value="{{ obj }}">{{ obj }}</option>
                   {% endif %}
                   {% endfor %}
-	 </div>
-	 </div>
+              </select>
+          </div>
+      </div>
 
       <div class="form-group">
           <label>word order</label>
@@ -114,7 +114,7 @@
               <option selected value="{{ wo }}">{{ wo }}</option>
               {% endif %}
               {% endfor %}
-
+          </select>
       </div>
 
       <div class="form-group">
@@ -130,8 +130,6 @@
     </div>
 
 </form>
-
-
 
   <!-- Initialize the plugin: -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
