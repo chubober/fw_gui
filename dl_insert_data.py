@@ -1,4 +1,5 @@
 
+from os import error
 import gspread
 import httplib2
 import apiclient.discovery
@@ -93,15 +94,18 @@ def merge_dfs(df1, df2):
   return merged.values.tolist()
 
 def main(filename):
-  test = pd.read_excel(filename, sheet_name = "Лист1",  na_values = "", keep_default_na = False)
+  try:
+    test = pd.read_excel(filename, sheet_name = "Лист1",  na_values = "", keep_default_na = False)
 
-  test1 = proper_column_names(test)
-  texts_set = set(test['text'].tolist())
-  test_list=test1.values.tolist()
+    test1 = proper_column_names(test)
+    texts_set = set(test['text'].tolist())
+    test_list=test1.values.tolist()
 
-  for text_name in texts_set:
-    new_text = [x for x in test_list if x[21] == text_name]
-    h = [["" if pd.isnull(x) else x for x in elem] for elem in new_text]
-    if len(new_text) > 0:
-      save_to_db(h)
-  return
+    for text_name in texts_set:
+      new_text = [x for x in test_list if x[21] == text_name]
+      h = [["" if pd.isnull(x) else x for x in elem] for elem in new_text]
+      if len(new_text) > 0:
+        save_to_db(h)
+    return
+  except Exception as error:
+    return error

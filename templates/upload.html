@@ -42,7 +42,11 @@
     </div>
   </nav>
 
-  <form action = '/res_corp'  method="post" autocomplete="off" class="container-fluid" enctype="multipart/form-data" >Выберите экспедицию:<br>
+  {% for cat, msg in get_flashed_messages(True) %}
+  <div class = 'flash {{cat}}'>{{msg}}</div>
+  {% endfor %}
+
+  <form action = "{{url_for('res_corp')}}"  method="post" autocomplete="off" class="container-fluid" enctype="multipart/form-data" >Выберите экспедицию:<br>
   <select>
     <option>Язык</option>
     <option>Новая (пока просто покажется страничка "сорян функция в разработке")</option>
