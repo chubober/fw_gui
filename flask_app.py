@@ -1,4 +1,6 @@
+from flask.helpers import flash
 import pandas as pd
+import os
 from search import find_evth
 from dl_insert_data import main, save_to_db
 # import gspread
@@ -7,13 +9,14 @@ from sqlalchemy import create_engine
 from sqlalchemy import Column, Integer, Text
 from sqlalchemy.sql.expression import any_
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import session, sessionmaker
 from ordered_set import OrderedSet as ordset
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, sessions, url_for
 from werkzeug.utils import secure_filename
 # from oauth2client.service_account import ServiceAccountCredentials
 
 app = Flask(__name__)
+
 
 engine = create_engine('postgresql+psycopg2://lingvist:lingvistpassword@178.154.193.115:5432/mydatabase')
 
@@ -24,7 +27,7 @@ Base = declarative_base()
 # client = gspread.authorize(credentials)
 # sheet = client.open_by_key('1FCJWHM149zndo3i4iTXyXV6CJD3lujJarHSk6h8e5Qw')
 # dataframe = pd.DataFrame(sheet.get_all_records())
-
+app.secret_key = 'rgrwfgkfm5mterfmesmf5k4efmlrkltt5FGTvvtgtgrFTY'
 
 class DF(Base):
     __tablename__ = 'data'
@@ -111,7 +114,7 @@ def main_page():
     session.close()
     return render_template('index.html', texts=texts,
                            subjs=subjs, objs=objs,
-                           verbs=verbs, wos=wos)
+                           verbs=verbs, wos=wos, messages = {'main':''})
 
 
 @app.route('/result', methods=['get'])
@@ -132,13 +135,14 @@ def result():
         results = con.execute(query)
 
     res_dicts = dicter(results)
+    #print(len(res_dicts))
 
     return render_template('result.html', results=res_dicts,
                            isinst=isinstance, lst=list)
 
 @app.route('/upload')
 def upload():
-    return (render_template('upload.html'))
+    return (render_template('upload.html',messages = {'main':''} ))
 
 @app.route('/res_corp', methods=['post'])
 def res_corp():
@@ -146,15 +150,16 @@ def res_corp():
         file = request.files['filename']
     if file:
         filename = secure_filename(file.filename)
-        #file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        #a = 'file uploaded'
         file.save(file.filename)
-        #test = pd.read_excel(filename, sheet_name = "Лист1",  na_values = "", keep_default_na = False)
         res = main(file.filename)
-        
-
-    return redirect(url_for('main_page'))
-    #render_template('index.html')
+        if type(res) == ValueError:
+            flash(str(res), category = 'error')
+            os.remove(os.path.abspath(filename))
+            return redirect(request.referrer)
+        else:
+            flash("Your data was successfully uploaded", category='success')
+            os.remove(os.path.abspath(filename))
+            return redirect(url_for('main_page'))
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=80)
