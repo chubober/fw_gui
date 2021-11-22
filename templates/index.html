@@ -77,7 +77,7 @@
                   <option selected value="{{ subj }}">{{ subj }}</option>
                   {% endif %}
                   {% endfor %}
-
+	 </div>
 
           <div class="form-group col-md-4">
               <label>verb</label>
@@ -89,7 +89,7 @@
                   <option selected value="{{ verb }}">{{ verb }}</option>
                   {% endif %}
                   {% endfor %}
-	
+	  </div>
 
           <div class="form-group col-md-4">
               <label>object</label>
@@ -101,7 +101,8 @@
                   <option selected value="{{ obj }}">{{ obj }}</option>
                   {% endif %}
                   {% endfor %}
-
+	 </div>
+	 </div>
 
       <div class="form-group">
           <label>word order</label>
@@ -114,6 +115,12 @@
               {% endif %}
               {% endfor %}
 
+      </div>
+
+      <div class="form-group">
+        <button type="button" class='btn btn-danger remove'>remove section</button>
+      </div>
+
     </div>
   </div>
 
@@ -123,6 +130,8 @@
     </div>
 
 </form>
+
+
 
   <!-- Initialize the plugin: -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
