@@ -151,16 +151,16 @@ def res_corp():
     if request.method == 'POST':
         file = request.files['filename']
     if file:
-        filename = secure_filename(file.filename)
+        # filename = secure_filename(file.filename)
         file.save(file.filename)
         res = main(file.filename)
         if type(res) == ValueError:
             flash(str(res), category = 'error')
-            os.remove(os.path.abspath(filename))
+            os.remove(os.path.abspath(file.filename))
             return redirect(request.referrer)
         else:
             flash("Your data was successfully uploaded", category='success')
-            os.remove(os.path.abspath(filename))
+            os.remove(os.path.abspath(file.filename))
             return redirect(url_for('main_page'))
 
 if __name__ == '__main__':
