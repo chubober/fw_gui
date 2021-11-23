@@ -53,55 +53,52 @@
           <label>sources</label>
           <select required multiple class="selectpicker" data-actions-box="true" tabindex="-98" name="text" multiple data-selected-text-format="count" data-width="fit" data-container="body">
               {% for text in texts %}
-	      {% if text == '' %}
+	            {% if text == '' %}
               <option selected value="{{ text }}">Не размечено</option>
               {% else %}
               <option selected value="{{ text }}">{{ text }}</option>
               {% endif %}
-         
               {% endfor %}
           </select>
       </div>
 
-      <div class="form-row">
-          <div class="form-group col-md-4">
-              <label>subject</label>
-              <select required multiple class="selectpicker" id="subj" name="subj" data-actions-box="true" tabindex="-98" name="text" multiple data-selected-text-format="count" data-width="fit" data-container="body">
-                  {% for subj in subjs %}
-                  {% if subj == '' %}
-		      <option selected value="{{ subj }}">Не размечено</option>
-		  {% else %}
-		      <option selected value="{{ subj }}">{{ subj }}</option>
-		  {% endif %}
-                  {% endfor %}
+      <div class="form-group">
+          <label>subject</label>
+          <select required multiple class="selectpicker" id="subj" name="subj" data-actions-box="true" tabindex="-98" name="text" multiple data-selected-text-format="count" data-width="fit" data-container="body">
+              {% for subj in subjs %}
+              {% if subj == '' %}
+		          <option selected value="{{ subj }}">Не размечено</option>
+		          {% else %}
+		          <option selected value="{{ subj }}">{{ subj }}</option>
+		          {% endif %}
+              {% endfor %}
               </select>
           </div>
 
-          <div class="form-group col-md-4">
-              <label>verb</label>
-              <select required multiple class="selectpicker" id="verb" name="verb" data-actions-box="true" tabindex="-98" name="text" multiple data-selected-text-format="count" data-width="fit" data-container="body">
-                  {% for verb in verbs %}
-                  {% if verb == '' %}
-                  <option selected value="{{ verb }}">Не размечено</option>
-                  {% else %}
-                  <option selected value="{{ verb }}">{{ verb }}</option>
-                  {% endif %}
-                  {% endfor %}
-              </select>
-          </div>
+      <div class="form-group">
+          <label>verb</label>
+          <select required multiple class="selectpicker" id="verb" name="verb" data-actions-box="true" tabindex="-98" name="text" multiple data-selected-text-format="count" data-width="fit" data-container="body">
+              {% for verb in verbs %}
+              {% if verb == '' %}
+              <option selected value="{{ verb }}">Не размечено</option>
+              {% else %}
+              <option selected value="{{ verb }}">{{ verb }}</option>
+              {% endif %}
+              {% endfor %}
+          </select>
+      </div>
       
-          <div class="form-group col-md-4">
-              <label>object</label>
-              <select required multiple class="selectpicker" id="obj" name="obj" data-actions-box="true" tabindex="-98" name="text" multiple data-selected-text-format="count" data-width="fit" data-container="body">
-                  {% for obj in objs %}
-                  {% if obj == '' %}
-                  <option selected value="{{ obj }}">Не размечено</option>
-                  {% else %}
-                  <option selected value="{{ obj }}">{{ obj }}</option>
-                  {% endif %}
-                  {% endfor %}
-              </select>
-          </div>
+      <div class="form-group">
+          <label>object</label>
+          <select required multiple class="selectpicker" id="obj" name="obj" data-actions-box="true" tabindex="-98" name="text" multiple data-selected-text-format="count" data-width="fit" data-container="body">
+              {% for obj in objs %}
+              {% if obj == '' %}
+              <option selected value="{{ obj }}">Не размечено</option>
+              {% else %}
+              <option selected value="{{ obj }}">{{ obj }}</option>
+              {% endif %}
+              {% endfor %}
+          </select>
       </div>
 
       <div class="form-group">
@@ -119,13 +116,13 @@
 
       <div class="form-group">
         <button type="button" class='btn btn-danger remove'>remove section</button>
+        <button type="button" class="btn btn-primary addsection">add section</button>
       </div>
 
     </div>
   </div>
 
-    <div class="form-group row justify-content-around fixed-bottom mt-xl-4">
-      <button type="button" class="btn btn-primary addsection">add section</button>
+    <div class="d-flex justify-content-start mt-xl-4">
       <button type="submit" class="btn btn-success">search</button>
     </div>
 

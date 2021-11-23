@@ -20,7 +20,20 @@ $('body').on('click', '.addsection', function() {
 
     section.find('.bootstrap-select').replaceWith(function() { return $('select', this); });
     section.find('.selectpicker').selectpicker();
+    $( '.addsection' ).last().remove()
     section.appendTo('#sections');
+    return false;
+});
+
+$('#sections').on('click', '.remove:last', function() {
+    //fade out section
+    $(this).parent().fadeOut(1, function(){
+        //remove parent element (main section)
+        $(this).parent().remove();
+        sectionsCount--;
+        $( '.section .form-group' ).last().append('<button type="button" class="btn btn-primary addsection">add section</button>');
+        return false;
+    });
     return false;
 });
 
