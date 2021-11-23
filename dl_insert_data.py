@@ -95,7 +95,7 @@ def merge_dfs(df1, df2):
 
 def main(filename):
   try:
-    test = pd.read_excel(filename, sheet_name = "Лист1",  na_values = "", keep_default_na = False)
+    test = pd.read_excel(filename, sheet_name = "FW_project",  na_values = "", keep_default_na = False)
 
     test1 = proper_column_names(test)
     texts_set = set(test['text'].tolist())
