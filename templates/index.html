@@ -33,6 +33,9 @@
 
 
   <!-- Page Content -->
+ {% for cat, msg in get_flashed_messages(True) %}
+  <div class = 'flash {{cat}}'>{{msg}}</div>
+  {% endfor %}
 <form action="/result" target="_blank" method="GET" autocomplete="off" class="container-fluid mt-xl-4">
   <div id="sections" class="row flex-row flex-nowrap scroll">
     <div class="col col-md-4 col-12 section card pt-xl-3">
