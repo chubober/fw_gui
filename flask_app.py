@@ -149,9 +149,11 @@ def upload():
 
 @app.route('/res_corp', methods=['post'])
 def res_corp():
+    print(request.files)
     if request.method == 'POST':
-        file = request.files['filename']
-    if file:
+        file = request.files.get('filename')
+        print("nuka 4etut", file.filename)
+    if file.filename != '':
         # filename = secure_filename(file.filename)
         file.save(file.filename)
         res = main(file.filename)
@@ -164,6 +166,9 @@ def res_corp():
             flash("Your data was successfully uploaded", category='success')
             os.remove(os.path.abspath(file.filename))
             return redirect(url_for('main_page'))
+    flash("Please attach a file!", category = 'error')
+    return redirect(request.referrer)
+
 
 @app.route('/get_file', methods=['get'])
 def get_file():
