@@ -26,6 +26,7 @@
   </nav>
 
   <!-- Page Content -->
+
   {% if not results %}
     <div class="container">
         <h2> No result :( Please try again </h2>
@@ -33,7 +34,10 @@
   {% else %}
   <div class = "amount">
     Всего нашлось {{results | length}} вхождений
+    <br>
+    <a href = "/get_file">Download in csv</a>
   </div>
+  
   {% for result in results %}
   <div class="card">
     <h3 class="card-header"> {{ result['id'] }} </h3>

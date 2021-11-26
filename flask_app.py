@@ -1,4 +1,4 @@
-from flask.helpers import flash
+from flask.helpers import flash, send_file
 import pandas as pd
 import os
 from search import find_evth
@@ -13,6 +13,7 @@ from sqlalchemy.orm import session, sessionmaker
 from ordered_set import OrderedSet as ordset
 from flask import Flask, render_template, request, redirect, sessions, url_for
 from werkzeug.utils import secure_filename
+import csv
 # from oauth2client.service_account import ServiceAccountCredentials
 
 app = Flask(__name__)
@@ -136,10 +137,10 @@ def result():
     with engine.connect() as con:
         results = con.execute(query)
 
-    res_dicts = dicter(results)
+    result.res_dicts = dicter(results)
     #print(len(res_dicts))
 
-    return render_template('result.html', results=res_dicts,
+    return render_template('result.html', results=result.res_dicts,
                            isinst=isinstance, lst=list)
 
 @app.route('/upload')
@@ -164,6 +165,17 @@ def res_corp():
             os.remove(os.path.abspath(file.filename))
             return redirect(url_for('main_page'))
 
+@app.route('/get_file', methods=['get'])
+def get_file():
+    res = result.res_dicts
+    #print(res)
+    with open("FW_GUI_results.csv", 'w') as file:
+        writer = csv.writer(file)
+        writer.writerow(('id', 'clause', 'tr', 'text', 'subj', 'obj', 'verb', 'wo'))
+        for dic in res:
+            writer.writerow((dic['id'],dic['clause'],dic['tr'],dic['text'], dic['subj'], dic['obj'], dic['verb'], dic['wo']))
+    return send_file('./FW_GUI_results.csv')
+    #return redirect(url_for('main_page'))
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=80)
 
