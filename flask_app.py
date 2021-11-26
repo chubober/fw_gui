@@ -155,7 +155,8 @@ def res_corp():
         file.save(file.filename)
         res = main(file.filename)
         if type(res) == ValueError:
-            flash(str(res), category = 'error')
+            ress = f"Error: {str(res)}.\nUse the following spreadsheet as the reference. Remember to have FW_project sheet and same columns as the template: "
+            flash(ress, category = 'error')
             os.remove(os.path.abspath(file.filename))
             return redirect(request.referrer)
         else:
