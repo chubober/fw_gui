@@ -29,29 +29,33 @@
   </head>
 
 <body>
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
+ <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
     <div class="container">
+
+      <a class="navbar-brand" href="#">FW GUI</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
       <a class="navbar-brand" href="/">FW GUI</a>
-      <a class="navbar-brand" href="upload">Upload data</a>
+
     </div>
   </nav>
 
   {% for cat, msg in get_flashed_messages(True) %}
-  <div class = 'flash {{cat}}'>{{msg}}   <a target="_blank" href = https://docs.google.com/spreadsheets/d/1JR-5aGamR2Y4EHC3atQj_STkxvyuQTVsaPaFc9NUaQo/edit?usp=sharing>Template</a></div>
+  <div class = 'flash {{cat}}'>{{msg}}   <b><a target="_blank" href = https://docs.google.com/spreadsheets/d/1JR-5aGamR2Y4EHC3atQj_STkxvyuQTVsaPaFc9NUaQo/edit?usp=sharing style="color: #330000">Template</a></b></div>
   {% endfor %}
 
-  <form action = "{{url_for('res_corp')}}"  method="post" autocomplete="off" class="container-fluid" enctype="multipart/form-data" >Выберите экспедицию:<br>
+  <form action = "{{url_for('res_corp')}}"  method="post" autocomplete="off" class="container-fluid" enctype="multipart/form-data" ><br>Выберите экспедицию:<br>
   <select>
     <option>Язык</option>
     <option>Новая (пока просто покажется страничка "сорян функция в разработке")</option>
   </select>
-<br>
- <br>
+  <br>
+  <br>
   <label for="file">Выберите корпус для подгрузки:<br></label>
-
-
   <input type="file" class = "form-control-file" id="myFile" name="filename" accept = ".xls, .xlsx">
-
+  <br>
   <input class="submit" type="submit" name="submit" value="Отправить">
 
 </form>
