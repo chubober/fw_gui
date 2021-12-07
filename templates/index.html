@@ -33,102 +33,11 @@
 
 
   <!-- Page Content -->
- {% for cat, msg in get_flashed_messages(True) %}
-  <div class = 'flash {{cat}}'>{{msg}}</div>
-  {% endfor %}
-<form action="/result" target="_blank" method="GET" autocomplete="off" class="container-fluid mt-xl-4">
-  <div id="sections" class="row flex-row flex-nowrap scroll">
-    <div class="col col-md-4 col-12 section card pt-xl-3">
-
-      <div class="form-row">
-          <div class="form-group col-md-6">
-              <label>clause</label>
-              <input class="form-control" name="clause" list="clause" id="main input">
-          </div>
-      
-          <div class="form-group col-md-6">
-              <label>translation</label>
-              <input class="form-control" name="tr" list="tr" id="translation">
-          </div>
-      </div>
-
-      <div class="form-group">
-          <label>sources</label>
-          <select required multiple class="selectpicker" data-actions-box="true" tabindex="-98" name="text" multiple data-selected-text-format="count" data-width="fit" data-container="body">
-              {% for text in texts %}
-	            {% if text == '' %}
-              <option selected value="{{ text }}">Не размечено</option>
-              {% else %}
-              <option selected value="{{ text }}">{{ text }}</option>
-              {% endif %}
-              {% endfor %}
-          </select>
-      </div>
-
-      <div class="form-group">
-          <label>subject</label>
-          <select required multiple class="selectpicker" id="subj" name="subj" data-actions-box="true" tabindex="-98" name="text" multiple data-selected-text-format="count" data-width="fit" data-container="body">
-              {% for subj in subjs %}
-              {% if subj == '' %}
-		          <option selected value="{{ subj }}">Не размечено</option>
-		          {% else %}
-		          <option selected value="{{ subj }}">{{ subj }}</option>
-		          {% endif %}
-              {% endfor %}
-              </select>
-          </div>
-
-      <div class="form-group">
-          <label>verb</label>
-          <select required multiple class="selectpicker" id="verb" name="verb" data-actions-box="true" tabindex="-98" name="text" multiple data-selected-text-format="count" data-width="fit" data-container="body">
-              {% for verb in verbs %}
-              {% if verb == '' %}
-              <option selected value="{{ verb }}">Не размечено</option>
-              {% else %}
-              <option selected value="{{ verb }}">{{ verb }}</option>
-              {% endif %}
-              {% endfor %}
-          </select>
-      </div>
-      
-      <div class="form-group">
-          <label>object</label>
-          <select required multiple class="selectpicker" id="obj" name="obj" data-actions-box="true" tabindex="-98" name="text" multiple data-selected-text-format="count" data-width="fit" data-container="body">
-              {% for obj in objs %}
-              {% if obj == '' %}
-              <option selected value="{{ obj }}">Не размечено</option>
-              {% else %}
-              <option selected value="{{ obj }}">{{ obj }}</option>
-              {% endif %}
-              {% endfor %}
-          </select>
-      </div>
-
-      <div class="form-group">
-          <label>word order</label>
-          <select required multiple class="selectpicker" id="wo" name="wo" data-actions-box="true" tabindex="-98" name="text" multiple data-selected-text-format="count" data-width="fit" data-container="body">
-              {% for wo in wos %}
-              {% if wo == '' %}
-              <option selected value="{{ wo }}">Не размечено</option>
-              {% else %}
-              <option selected value="{{ wo }}">{{ wo }}</option>
-              {% endif %}
-              {% endfor %}
-          </select>
-      </div>
-
-      <div class="form-group">
-        <button type="button" class='btn btn-danger remove'>remove section</button>
-        <button type="button" class="btn btn-primary addsection">add section</button>
-      </div>
-
-    </div>
+  <br>
+  <div class="text-center">
+    <p>We collect language data</p>
+    <h3><a href="/moksha">Moksha</a></h3>
   </div>
-
-    <div class="d-flex justify-content-start mt-xl-4">
-      <button type="submit" class="btn btn-success">search</button>
-    </div>
-  </form>
 
   <!-- Initialize the plugin: -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
