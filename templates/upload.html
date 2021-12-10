@@ -43,16 +43,49 @@
   {% endfor %}
 
   <form action = "{{url_for('res_corp')}}"  method="post" autocomplete="off" class="container-fluid" enctype="multipart/form-data" ><br>Выберите экспедицию:<br>
-  <select>
-    <option>Язык</option>
-    <option>Новая (пока просто покажется страничка "сорян функция в разработке")</option>
+  <select name = "lang_select" id = "langs">
+    {% for lang in langs %}
+    <option value = "{{lang}}">{{lang}}</option>
+    {% endfor %}
+    <option value = "lang">Test_lang</option>
+    <option value = "other" name = "other"> Other </option>
   </select>
   <br>
   <br>
-  <label for="file">Выберите корпус для подгрузки:<br></label>
+    <label for="text">Your language:<br></label>
+    <input type="text" id = "lang" name = "lang_name">
+  <br>
+  <label for="file">Select your corpus:<br></label>
   <input type="file" class = "form-control-file" id="myFile" name="filename" accept = ".xls, .xlsx">
   <br>
-  <input class="submit" type="submit" name="submit" value="Отправить">
+  <input class="submit" type="submit" name="submit" value="Submit">
+    
 
 </form>
 </body>
+  <script type="text/javascript">
+  var button = document.getElementById("lang");
+
+// Disable the button on initial page load
+  button.disabled = true;
+
+//add event listener
+
+  document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('langs').addEventListener('input', makelang);
+  });
+
+  function makelang(event) {
+    console.log(this.value)
+    if (this.value == "other")
+    button.disabled = !button.disabled;
+    else
+    button.disabled = true;
+  }
+
+
+
+</script>
+<!--Button Disable Script-->
+</html>
+
