@@ -2,7 +2,7 @@ from flask.helpers import flash, send_file
 import pandas as pd
 import os
 from search import find_evth
-from dl_insert_data import main, save_to_db
+from dl_insert_data import main, save_to_db, get_colnames
 # import gspread
 from sqlalchemy import func
 from sqlalchemy import create_engine
