@@ -1,8 +1,10 @@
 from flask.helpers import flash, send_file
 import pandas as pd
 import os
+
+from pandas.io import json
 from search import find_evth
-from dl_insert_data import main, save_to_db
+from dl_insert_data import main, save_to_db, create_table, insert_into_table, get_colnames
 # import gspread
 from sqlalchemy import func
 from sqlalchemy import create_engine
@@ -14,6 +16,9 @@ from ordered_set import OrderedSet as ordset
 from flask import Flask, render_template, request, redirect, sessions, url_for
 from werkzeug.utils import secure_filename
 import csv
+import plotly
+import plotly.express as px
+import json
 # from oauth2client.service_account import ServiceAccountCredentials
 
 app = Flask(__name__)
@@ -138,8 +143,6 @@ def result():
         results = con.execute(query)
 
     result.res_dicts = dicter(results)
-    #print(len(res_dicts))
-
     return render_template('result.html', results=result.res_dicts,
                            isinst=isinstance, lst=list)
 
@@ -149,14 +152,25 @@ def upload():
 
 @app.route('/res_corp', methods=['post'])
 def res_corp():
-    print(request.files)
+    #print(request.files)
+    cols_str = ''
     if request.method == 'POST':
         file = request.files.get('filename')
-        print("nuka 4etut", file.filename)
-    if file.filename != '':
-        # filename = secure_filename(file.filename)
+        formm = request.form.get('lang_select')
+        new_lang = request.form.get('lang_name')
+        #print("nuka 4etut", file.filename, 'a ento: ', str(formm), "echo:", new_lang)
+    if str(formm) == "other" and file.filename != '':
+        create_table()
         file.save(file.filename)
+        colnames = get_colnames(file.filename)
+        cols = colnames.columns
+        for elem in cols.values:
+            cols_str += str(elem) + ", "
+        #print(cols_str)
+        insert_into_table(new_lang, cols_str)   
+        # filename = secure_filename(file.filename)
         res = main(file.filename)
+        print(res)
         if type(res) == ValueError:
             ress = f"Error: {str(res)}.\nUse the following spreadsheet as the reference. Remember to have FW_project sheet and same columns as the template: "
             flash(ress, category = 'error')
@@ -166,6 +180,7 @@ def res_corp():
             flash("Your data was successfully uploaded", category='success')
             os.remove(os.path.abspath(file.filename))
             return redirect(url_for('main_page'))
+
     flash("Please attach a file!", category = 'error')
     return redirect(request.referrer)
 
