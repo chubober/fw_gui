@@ -93,9 +93,13 @@ def merge_dfs(df1, df2):
   merged = pd.concat([df1,df2]).drop_duplicates(keep=False)
   return merged.values.tolist()
 
+def get_colnames(filename):
+  test = pd.read_excel(filename, sheet_name = "FW_project",  na_values = "", keep_default_na = False)
+  return test
+
 def main(filename):
   try:
-    test = pd.read_excel(filename, sheet_name = "FW_project",  na_values = "", keep_default_na = False)
+    test = get_colnames(filename)
 
     test1 = proper_column_names(test)
     texts_set = set(test['text'].tolist())
