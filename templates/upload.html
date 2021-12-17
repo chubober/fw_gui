@@ -42,8 +42,9 @@
   <div class = 'flash {{cat}}'>{{msg}}   <b><a target="_blank" href = https://docs.google.com/spreadsheets/d/1JR-5aGamR2Y4EHC3atQj_STkxvyuQTVsaPaFc9NUaQo/edit?usp=sharing style="color: #330000">Template</a></b></div>
   {% endfor %}
 
-  <form action = "{{url_for('res_corp')}}"  method="post" autocomplete="off" class="container-fluid" enctype="multipart/form-data" ><br>Выберите экспедицию:<br>
-  <select name = "lang_select" id = "langs">
+  <form action = "{{url_for('res_corp')}}"  method="post" autocomplete="off" class="container-fluid" enctype="multipart/form-data" >
+  <!--
+    <select name = "lang_select" id = "langs">
     {% for lang in langs %}
     <option value = "{{lang}}">{{lang}}</option>
     {% endfor %}
@@ -55,10 +56,12 @@
   <label for="text">Your language:<br></label>
     <input type="text" id = "lang" name = "lang_name">
   <br>
+-->
+<br>
   <label for="file">Select your corpus:<br></label>
   <input type="file" class = "form-control-file" id="myFile" name="filename" accept = ".xls, .xlsx" >
   <br>
-  <input class="submit" type="submit" name="submit" value="Submit">
+  <input class="submit" type="submit" name="submit" value="New corpus">
 
 </form>
 </body>

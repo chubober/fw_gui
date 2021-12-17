@@ -2,12 +2,15 @@
 from os import error
 import gspread
 import httplib2
+import json
+
+import numpy as np
 import apiclient.discovery
 from oauth2client.service_account import ServiceAccountCredentials
 import pandas as pd
 import sqlalchemy
 import psycopg2
-from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
+from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT, JSON
 import sqlite3
 from sqlalchemy import create_engine
 from sqlalchemy import func
@@ -31,23 +34,38 @@ def proper_column_names(dff):
   return dff
 
 
-def create_table():
+def create_corp_table(id, cols):
+  st = ""
+  for elem in cols:
+    new_col = f' "{str(elem)}" varchar(255)'
+    if st != "":
+      st+= ', '
+    st += new_col
+  query = f"""CREATE TABLE IF NOT EXISTS corp_{id} ( {st} )"""
+  cursor.execute(query)
+  connection.commit()
+  return
+
+
+def create_metatable():
   query = """CREATE TABLE IF NOT EXISTS languages (
     id serial PRIMARY KEY,
     name VARCHAR(255),
-    columns VARCHAR(255)
+    sel_cols VARCHAR(255),
+    text_cols VARCHAR(255)
     )"""
   cursor.execute(query)
   connection.commit()
   return
 
-
-
-def insert_into_table(lang, columns):
-  query = f"insert into languages(name, columns) values ('{lang}', '{columns}')"
+def insert_new_line():
+  query = f"insert into languages (name, sel_cols, text_cols) values (NULL,NULL,NULL) "
   cursor.execute(query)
   connection.commit()
-  return
+  cursor.execute("select id from languages order by id desc limit 1")
+  res = cursor.fetchall()
+  return res[0][0]
+
 
 def make_options():
   options = []
@@ -98,13 +116,6 @@ def save_to_db(text):
           connection.close()
           print("PostgreSQL connection is closed")
 
-
-def get_colnames(filename):
-  test = pd.read_excel(filename, sheet_name = "FW_project",  na_values = "", keep_default_na = False)
-  return test
-
-
-
 def download_new_texts(filename):
   data = get_colnames(filename)
   #texts_set = set(data[0].tolist())
@@ -118,21 +129,51 @@ def download_new_texts(filename):
   #h = [["" if pd.isnull(x) else x for x in elem] for elem in new_text]
   #print(h)
 
+def read_excel(filename):
+  test = pd.read_excel(filename, sheet_name = "FW_project",  na_values = "", keep_default_na = False)
+  return test
+
+def col_names(filename):
+  data = read_excel(filename)
+  cols = data.columns
+  values = cols.values
+  return values, data
+
+def insert_into_corp_table(data, id):
+    st = ""
+    for elem in data.columns:
+      new_v = '%s'
+      if st != "":
+        st+= ', '
+      st += new_v
+    query = f"insert into corp_{id} values ({st})"
+    #data.fillna("")
+    for row in data.values:
+      for ix, cell in enumerate(row):
+        if pd.isna(cell):
+          row[ix] = None
+      #print(row)
+      record_to_ins = tuple(row)
+      cursor.execute(query, record_to_ins)
+    connection.commit()    
 
 
 def main(filename):
-  test = get_colnames(filename)
-  #test1 = proper_column_names(test)
-  #texts_set = set(test['text'].tolist())
-  #test_list=test1.values.tolist()
-  #print('test ', test)
-  #h = [["" if pd.isnull(x) else x for x in elem] for elem in test]
-  
-  #for text_name in texts_set:
-  #  new_text = [x for x in test_list if x[21] == text_name]
-  #  h = [["" if pd.isnull(x) else x for x in elem] for elem in new_text]
-  #  if len(new_text) > 0:
-  #    save_to_db(h)
-  #return h
+  engine = create_engine('postgresql+psycopg2://lingvist:lingvistpassword@178.154.193.115:5432/mydatabase')
+  connection = psycopg2.connect(user="lingvist",
+                                    password="lingvistpassword",
+                                    host="178.154.193.115",
+                                    port="5432",
+                                    database="mydatabase")
+  cursor = connection.cursor()
+  create_metatable()
+  id = insert_new_line()
+  names, data = col_names(filename)
+  create_corp_table(id, names)
+  insert_into_corp_table(data, id)
 
-#print(r)
+  return 
+
+#names, data = col_names('test.xls')
+#insert_into_corp_table(data, 23)
+#print(names)

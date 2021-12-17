@@ -32,6 +32,7 @@
         <h2> No result :( Please try again </h2>
     </div>
   {% else %}
+  <div id='chart' class='chart'”></div>
   <div class = "amount">
     Всего нашлось {{results | length}} вхождений
     <br>
@@ -60,5 +61,12 @@
   <script src="/static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
 </body>
+<!--
+<script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
+<script type='text/javascript'>
+  var graphs = {{graphJSON | safe}};
+  Plotly.plot('chart',graphs,{});
+</script>
+-->
 
 </html>

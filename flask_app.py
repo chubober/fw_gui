@@ -1,10 +1,9 @@
 from flask.helpers import flash, send_file
 import pandas as pd
 import os
-
 from pandas.io import json
 from search import find_evth
-from dl_insert_data import main, save_to_db, create_table, insert_into_table, get_colnames
+from dl_insert_data import main
 # import gspread
 from sqlalchemy import func
 from sqlalchemy import create_engine
@@ -156,12 +155,13 @@ def res_corp():
     cols_str = ''
     if request.method == 'POST':
         file = request.files.get('filename')
-        formm = request.form.get('lang_select')
-        new_lang = request.form.get('lang_name')
+        #formm = request.form.get('lang_select')
+        #new_lang = request.form.get('lang_name')
         #print("nuka 4etut", file.filename, 'a ento: ', str(formm), "echo:", new_lang)
-    if str(formm) == "other" and file.filename != '':
-        create_table()
+    if file.filename != '':
+        
         file.save(file.filename)
+        '''
         colnames = get_colnames(file.filename)
         cols = colnames.columns
         for elem in cols.values:
@@ -169,6 +169,7 @@ def res_corp():
         #print(cols_str)
         insert_into_table(new_lang, cols_str)   
         # filename = secure_filename(file.filename)
+        '''
         res = main(file.filename)
         print(res)
         if type(res) == ValueError:
