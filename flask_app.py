@@ -104,6 +104,13 @@ def dicter(records):
 
 @app.route('/')
 def main_page():
+
+
+    return render_template('index.html')
+
+
+@app.route('/moksha')
+def moksha():
     
     Base.metadata.create_all(engine)
 
@@ -117,14 +124,12 @@ def main_page():
     verbs = sorted(list(set(x.verb for x in recs if x)))
     wos = sorted(list(set(x.wo for x in recs if x)))
     session.close()
-    return render_template('index.html', texts=texts,
+    return render_template('moksha.html', texts=texts,
                            subjs=subjs, objs=objs,
                            verbs=verbs, wos=wos, messages = {'main':''})
 
-    
-    return render_template('index.html')
 
-@app.route('/result', methods=['get'])
+@app.route('/moksha/result', methods=['get'])
 def result():
     Base.metadata.create_all(engine)
     Session = sessionmaker(bind=engine)
@@ -197,6 +202,8 @@ def get_file():
             writer.writerow((dic['id'],dic['clause'],dic['tr'],dic['text'], dic['subj'], dic['obj'], dic['verb'], dic['wo']))
     return send_file('./FW_GUI_results.csv')
     #return redirect(url_for('main_page'))
+
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=80)
 

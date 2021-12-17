@@ -158,6 +158,10 @@ def insert_into_corp_table(data, id):
     connection.commit()    
 
 
+def get_colnames(filename):
+  test = pd.read_excel(filename, sheet_name = "FW_project",  na_values = "", keep_default_na = False)
+  return test
+
 def main(filename):
   engine = create_engine('postgresql+psycopg2://lingvist:lingvistpassword@178.154.193.115:5432/mydatabase')
   connection = psycopg2.connect(user="lingvist",
