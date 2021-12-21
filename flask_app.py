@@ -15,8 +15,8 @@ from ordered_set import OrderedSet as ordset
 from flask import Flask, render_template, request, redirect, sessions, url_for
 from werkzeug.utils import secure_filename
 import csv
-import plotly
-import plotly.express as px
+# import plotly
+# import plotly.express as px
 import json
 # from oauth2client.service_account import ServiceAccountCredentials
 
@@ -154,6 +154,23 @@ def result():
 def upload():
     return (render_template('upload.html',messages = {'main':''} ))
 
+
+@app.route('/upload/new/<name>')
+def upload_new(name):
+    query = f'''
+    SELECT column_name
+    FROM INFORMATION_SCHEMA.COLUMNS
+    WHERE TABLE_NAME = N'{name}'
+    '''
+
+    with engine.connect() as con:
+        col_names = con.execute(query)
+        
+    col_names = [col_name[0] for col_name in col_names]
+
+    return (render_template('upload_new.html', col_names=col_names, messages = {'main':''} ))
+
+
 @app.route('/res_corp', methods=['post'])
 def res_corp():
     #print(request.files)
@@ -183,9 +200,9 @@ def res_corp():
             os.remove(os.path.abspath(file.filename))
             return redirect(request.referrer)
         else:
-            flash("Your data was successfully uploaded", category='success')
+            # flash("Your data was successfully uploaded", category='success')
             os.remove(os.path.abspath(file.filename))
-            return redirect(url_for('main_page'))
+            return redirect(url_for('upload_new', name=res))
 
     flash("Please attach a file!", category = 'error')
     return redirect(request.referrer)

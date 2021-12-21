@@ -176,7 +176,8 @@ def main(filename):
   create_corp_table(id, names)
   insert_into_corp_table(data, id)
 
-  return 
+
+  return(f'corp_{id}')
 
 #names, data = col_names('test.xls')
 #insert_into_corp_table(data, 23)

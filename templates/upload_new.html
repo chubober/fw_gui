@@ -29,7 +29,7 @@
   </head>
 
 <body>
- <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
     <div class="container">
 
       <a class="navbar-brand" href="/">FW GUI</a>
@@ -41,53 +41,37 @@
   {% for cat, msg in get_flashed_messages(True) %}
   <div class = 'flash {{cat}}'>{{msg}}   <b><a target="_blank" href = https://docs.google.com/spreadsheets/d/1JR-5aGamR2Y4EHC3atQj_STkxvyuQTVsaPaFc9NUaQo/edit?usp=sharing style="color: #330000">Template</a></b></div>
   {% endfor %}
+  <br>
+  <h3 class="ml-3">new corpus</h3>
+  <form action = "#"  method="post" autocomplete="off" class="container-fluid" enctype="multipart/form-data">
+  
+  <div class="form-group col-md-3">
+    <label>corpus name</label>
+    <input class="form-control" name="name" list="name" id="name">
+  </div>
 
-  <form action = "{{url_for('res_corp')}}"  method="post" autocomplete="off" class="container-fluid" enctype="multipart/form-data" >
-  <!--
-    <select name = "lang_select" id = "langs">
-    {% for lang in langs %}
-    <option value = "{{lang}}">{{lang}}</option>
-    {% endfor %}
-    <option value = "lang">Test_lang</option>
-    <option value = "other" name = "other"> Other </option>
-  </select>
-  <br>
-  <br>
-  <label for="text">Your language:<br></label>
-    <input type="text" id = "lang" name = "lang_name">
-  <br>
--->
-<br>
-  <label for="file">Upload a corpus file in .xls or .xlsx<br></label>
-  <input type="file" class = "form-control-file" id="myFile" name="filename" accept = ".xls, .xlsx" >
-  <br>
-  <input class="submit" type="submit" name="submit" value="New corpus">
+  <p>search by:</p>
+  <div class="form-group">
+    <label>«select» columns</label>
+    <select required multiple class="selectpicker" data-actions-box="true" tabindex="-98" name="sel_cols" multiple data-selected-text-format="count" data-width="fit" data-container="body" id="sel_cols">
+        {% for col_name in col_names %}
+        <option value="{{ col_name }}">{{ col_name }}</option>
+        {% endfor %}
+    </select>
+  </div>
 
-</form>
+  <div class="form-group">
+    <label>«text» columns</label>
+    <select required multiple class="selectpicker" data-actions-box="true" tabindex="-98" name="text_cols" multiple data-selected-text-format="count" data-width="fit" data-container="body" id="text_cols">
+        {% for col_name in col_names %}
+        <option value="{{ col_name }}">{{ col_name }}</option>
+        {% endfor %}
+    </select>
+  </div>
+  
+  <input class="submit" type="submit" name="submit" value="upload new corpus">
+  </form>
+
+  <script  src="/static/js/options.js" crossorigin></script>
 </body>
-<!--Button Disable Script-->
-<script type="text/javascript">
-  var button = document.getElementById("lang");
-
-// Disable the button on initial page load
-  button.disabled = true;
-
-//add event listener
-
-  document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('langs').addEventListener('input', makelang);
-  });
-
-  function makelang(event) {
-    console.log(this.value)
-    if (this.value == "other")
-    button.disabled = !button.disabled;
-    else
-    button.disabled = true;
-  }
-
-
-
-</script>
-<!--Button Disable Script-->
 </html>
