@@ -37,7 +37,7 @@ def proper_column_names(dff):
 def create_corp_table(id, cols):
   st = ""
   for elem in cols:
-    new_col = f' "{str(elem)}" varchar(255)'
+    new_col = f' "{str(elem)}" text'
     if st != "":
       st+= ', '
     st += new_col
@@ -65,6 +65,12 @@ def insert_new_line():
   cursor.execute("select id from languages order by id desc limit 1")
   res = cursor.fetchall()
   return res[0][0]
+
+def insert_values_metadata(id, name, sel_cols, text_cols):
+  query = f"update languages set name = '{name}', sel_cols = '{sel_cols}', text_cols = '{text_cols}' where id = {id} "
+  cursor.execute(query)
+  connection.commit()
+
 
 
 def make_options():
@@ -162,23 +168,32 @@ def get_colnames(filename):
   test = pd.read_excel(filename, sheet_name = "FW_project",  na_values = "", keep_default_na = False)
   return test
 
+def check_file(filename):
+  xl = pd.ExcelFile(filename)
+  sheets = xl.sheet_names
+  for elem in sheets:
+    if elem == "FW_project":
+      return True
+  return False
+
+
+
 def main(filename):
-  engine = create_engine('postgresql+psycopg2://lingvist:lingvistpassword@178.154.193.115:5432/mydatabase')
-  connection = psycopg2.connect(user="lingvist",
-                                    password="lingvistpassword",
-                                    host="178.154.193.115",
-                                    port="5432",
-                                    database="mydatabase")
-  cursor = connection.cursor()
+  #engine = create_engine('postgresql+psycopg2://lingvist:lingvistpassword@178.154.193.115:5432/mydatabase')
+  #connection = psycopg2.connect(user="lingvist",
+  #                                  password="lingvistpassword",
+  #                                  host="178.154.193.115",
+  #                                  port="5432",
+  #                                  database="mydatabase")
+  #cursor = connection.cursor()
   create_metatable()
   id = insert_new_line()
   names, data = col_names(filename)
   create_corp_table(id, names)
   insert_into_corp_table(data, id)
 
-
+  #return
   return(f'corp_{id}')
 
-#names, data = col_names('test.xls')
-#insert_into_corp_table(data, 23)
-#print(names)
+
+
