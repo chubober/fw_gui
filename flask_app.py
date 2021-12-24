@@ -155,12 +155,12 @@ def upload():
     return (render_template('upload.html',messages = {'main':''} ))
 
 
-@app.route('/upload/new/<name>')
-def upload_new(name):
+@app.route('/upload/new/<corp_id>')
+def upload_new(corp_id):
     query = f'''
     SELECT column_name
     FROM INFORMATION_SCHEMA.COLUMNS
-    WHERE TABLE_NAME = N'{name}'
+    WHERE TABLE_NAME = N'{corp_id}'
     '''
 
     with engine.connect() as con:
@@ -168,12 +168,12 @@ def upload_new(name):
         
     col_names = [col_name[0] for col_name in col_names]
 
-    return (render_template('upload_new.html', id = name, col_names=col_names, messages = {'main':''} ))
+    return (render_template('upload_new.html', corp_id = corp_id, col_names=col_names, messages = {'main':''} ))
 
-@app.route('/end_of_new_upl',methods=['post'] )
+@app.route('/end_of_new_upl', methods=['post'] )
 def end_of_new_upl():
     if request.method == 'POST':
-        corp_id = request.form.get('id')
+        corp_id = request.form.get('corp_id')
         corp_name = request.form.get('name')
         sel_cols = request.form.getlist('sel_cols')
         text_cols = request.form.getlist('text_cols')
@@ -208,7 +208,7 @@ def res_corp():
             res = main(file.filename)
             # flash("Your data was successfully uploaded", category='success')
             os.remove(os.path.abspath(file.filename))
-            return redirect(url_for('upload_new', name=res))
+            return redirect(url_for('upload_new', corp_id=res))
 
     flash("Please attach a file!", category = 'error')
     return redirect(request.referrer)
