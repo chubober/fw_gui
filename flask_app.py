@@ -168,7 +168,7 @@ def upload_new(name):
         
     col_names = [col_name[0] for col_name in col_names]
 
-    return (render_template('upload_new.html', col_names=col_names, messages = {'main':''} ))
+    return (render_template('upload_new.html', id=name, col_names=col_names, messages = {'main':''} ))
 
 
 @app.route('/res_corp', methods=['post'])
