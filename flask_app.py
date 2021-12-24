@@ -104,10 +104,53 @@ def dicter(records):
 
 @app.route('/')
 def main_page():
+    corp_data = []
+
+    query = 'SELECT id, name FROM languages WHERE name IS NOT NULL'
+
+    with engine.connect() as con:
+        res = con.execute(query)
+
+    for entry in res:
+        corp_data.append(('/corp_' + str(entry[0]), entry[1]))
+
+    return render_template('index.html', corp_data=corp_data)
 
 
-    return render_template('index.html')
+@app.route('/<corp_id>')
+def corp_search(corp_id):
+    id = int(corp_id.split('_')[1])
 
+    cols_query = f'SELECT name, sel_cols, text_cols FROM languages WHERE id = {id}'
+
+    with engine.connect() as con:
+        cols_res = con.execute(cols_query)
+    
+    corp_name, sel_cols, text_cols = list(cols_res)[0]
+
+    sel_query = f'SELECT {sel_cols} FROM {corp_id}'
+
+    with engine.connect() as con:
+        sel_res = con.execute(sel_query)
+
+    recs = {}
+    sel_list = sel_cols.split(',')
+
+    for sel_col in sel_list:
+        recs[sel_col] = set()
+
+    for entry in sel_res:
+        for i, sel_col in enumerate(sel_list):
+            if entry[i]:
+                recs[sel_col].add(entry[i])
+    
+    for sel_col in sel_list:
+        recs[sel_col] = sorted(list(recs[sel_col]))
+    
+    text_list = text_cols.split(',')
+        
+    return render_template('corp_search.html', recs = recs,
+                            text_list = text_list, corp_name = corp_name)
 
 @app.route('/moksha')
 def moksha():

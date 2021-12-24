@@ -37,6 +37,9 @@
   <div class="text-center">
     <p>We collect language data</p>
     <h3><a href="/moksha">Moksha</a></h3>
+    {% for corp_link, corp_name in corp_data %}
+    <h3><a href={{corp_link}}>{{corp_name}}</a></h3>
+    {% endfor %}
   </div>
 
   <!-- Initialize the plugin: -->
