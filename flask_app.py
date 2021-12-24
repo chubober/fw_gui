@@ -3,7 +3,7 @@ import pandas as pd
 import os
 from pandas.io import json
 from search import find_evth
-from dl_insert_data import main
+from dl_insert_data import main, check_file, insert_values_metadata
 # import gspread
 from sqlalchemy import func
 from sqlalchemy import create_engine
@@ -168,8 +168,22 @@ def upload_new(name):
         
     col_names = [col_name[0] for col_name in col_names]
 
-    return (render_template('upload_new.html', id=name, col_names=col_names, messages = {'main':''} ))
+    return (render_template('upload_new.html', id = name, col_names=col_names, messages = {'main':''} ))
 
+@app.route('/end_of_new_upl',methods=['post'] )
+def end_of_new_upl():
+    if request.method == 'POST':
+        corp_id = request.form.get('id')
+        corp_name = request.form.get('name')
+        sel_cols = request.form.getlist('sel_cols')
+        text_cols = request.form.getlist('text_cols')
+        id = int(corp_id.split('_')[1])
+        sel = ','.join(sel_cols)
+        text = ','.join(text_cols)
+        print(corp_name, sel, text, id)
+        insert_values_metadata(id, corp_name, sel, text)
+    return redirect(url_for('main_page'))    
+    
 
 @app.route('/res_corp', methods=['post'])
 def res_corp():
@@ -183,23 +197,15 @@ def res_corp():
     if file.filename != '':
         
         file.save(file.filename)
-        '''
-        colnames = get_colnames(file.filename)
-        cols = colnames.columns
-        for elem in cols.values:
-            cols_str += str(elem) + ", "
-        #print(cols_str)
-        insert_into_table(new_lang, cols_str)   
-        # filename = secure_filename(file.filename)
-        '''
-        res = main(file.filename)
-        print(res)
-        if type(res) == ValueError:
-            ress = f"Error: {str(res)}.\nUse the following spreadsheet as the reference. Remember to have FW_project sheet and same columns as the template: "
+        check = check_file(file.filename)
+        print(check)
+        if check == False:
+            ress = f"Use the following spreadsheet as the reference. Remember to have FW_project sheet, for more information see the template: "
             flash(ress, category = 'error')
             os.remove(os.path.abspath(file.filename))
             return redirect(request.referrer)
         else:
+            res = main(file.filename)
             # flash("Your data was successfully uploaded", category='success')
             os.remove(os.path.abspath(file.filename))
             return redirect(url_for('upload_new', name=res))
@@ -223,4 +229,5 @@ def get_file():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=80)
+
 
