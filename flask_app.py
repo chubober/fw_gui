@@ -86,18 +86,13 @@ def chunker(req_dict, n, sel_list):
 #     return list(res_set)
 
 
-def dicter(records):
+def dicter(records, cols_list):
     dicts = []
     for record in records:
         dic = {}
         dic['id'] = record.id
-        dic['clause'] = record.clause
-        dic['tr'] = record.tr
-        dic['text'] = record.text
-        dic['subj'] = record.subj
-        dic['obj'] = record.obj
-        dic['verb'] = record.verb
-        dic['wo'] = record.wo
+        for col in cols_list:
+            exec(f'dic[\'{col}\'] = record.{col}')
         dicts.append(dic)
     return dicts
 
@@ -142,6 +137,8 @@ def corp_search(corp_id):
         for i, sel_col in enumerate(sel_list):
             if entry[i]:
                 recs[sel_col].add(entry[i])
+            else:
+                recs[sel_col].add('')
     
     for sel_col in sel_list:
         recs[sel_col] = sorted(list(recs[sel_col]))
@@ -182,17 +179,17 @@ def corp_result(corp_id):
     sel_cols, text_cols = list(cols_res)[0]
     sel_list = sel_cols.split(',')
     text_list = text_cols.split(',')
-    cols_num = len(sel_list) + len(text_list)
+    cols_list = text_list + sel_list
 
     req_dict = request.args.to_dict(flat=False)
-    req_dicts = chunker(req_dict, cols_num, sel_list)
+    req_dicts = chunker(req_dict, len(cols_list), sel_list)
 
     query = find_evth(req_dicts)
 
     with engine.connect() as con:
         results = con.execute(query)
 
-    result.res_dicts = dicter(results)
+    result.res_dicts = dicter(results, cols_list)
     return render_template('corp_result.html', results=result.res_dicts,
                            isinst=isinstance, lst=list)
 
@@ -203,8 +200,11 @@ def result():
     Session = sessionmaker(bind=engine)
     session = Session()
 
+    cols_list = ['clause', 'tr', 'text', 'subj', 'obj', 'verb', 'wo']
+    sel_list = ['text', 'subj', 'obj', 'verb', 'wo']
+
     req_dict = request.args.to_dict(flat=False)
-    req_dicts = chunker(req_dict, 7)
+    req_dicts = chunker(req_dict, len(cols_list), sel_list)
 
     # results = search_by_parameters(session, req_dicts)
     # session.close()
@@ -214,7 +214,7 @@ def result():
     with engine.connect() as con:
         results = con.execute(query)
 
-    result.res_dicts = dicter(results)
+    result.res_dicts = dicter(results, cols_list)
     return render_template('result.html', results=result.res_dicts,
                            isinst=isinstance, lst=list)
 
