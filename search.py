@@ -50,6 +50,8 @@ def find_evth(cards, corp_id):
           if new_val != "":
             new_val += "or "
           new_val += key + f" = '{replace_quot_sql(elem)}' "
+          if elem == '':
+            new_val = key + f" is NULL "
         if new_val != "":
           new_val ="("+new_val+ ")"
           #where += l_val
