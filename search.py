@@ -29,12 +29,12 @@ cards = [{
 
 
 
-def find_evth(cards):
+def find_evth(cards, corp_id):
   '''
   Поиск по карточкам
   '''
 
-  query = f"""select * from data """
+  query = f"""select * from {corp_id} """
 
   for card_ix, card in enumerate(cards):
     # print(card_ix, card)

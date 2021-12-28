@@ -89,10 +89,10 @@ def chunker(req_dict, n, sel_list):
 def dicter(records, cols_list):
     dicts = []
     for record in records:
+        record_dict = dict(record)
         dic = {}
-        dic['id'] = record.id
         for col in cols_list:
-            exec(f'dic[\'{col}\'] = record.{col}')
+            dic[col] = record_dict[col]
         dicts.append(dic)
     return dicts
 
@@ -115,6 +115,7 @@ def main_page():
 @app.route('/<corp_id>')
 def corp_search(corp_id):
     id = int(corp_id.split('_')[1])
+    
     cols_query = f'SELECT name, sel_cols, text_cols FROM languages WHERE id = {id}'
 
     with engine.connect() as con:
@@ -171,6 +172,7 @@ def moksha():
 @app.route('/<corp_id>/result', methods=['get'])
 def corp_result(corp_id):
     id = int(corp_id.split('_')[1])
+
     cols_query = f'SELECT sel_cols, text_cols FROM languages WHERE id = {id}'
 
     with engine.connect() as con:
@@ -184,13 +186,12 @@ def corp_result(corp_id):
     req_dict = request.args.to_dict(flat=False)
     req_dicts = chunker(req_dict, len(cols_list), sel_list)
 
-    query = find_evth(req_dicts)
+    query = find_evth(req_dicts, corp_id)
     with engine.connect() as con:
         results = con.execute(query)
 
-    result.res_dicts = dicter(results, cols_list)
-    return render_template('corp_result.html', results=result.res_dicts,
-                           isinst=isinstance, lst=list)
+    res_dicts = dicter(results, cols_list)
+    return render_template('result.html', results=res_dicts)
 
 
 @app.route('/moksha/result', methods=['get'])
@@ -208,14 +209,13 @@ def result():
     # results = search_by_parameters(session, req_dicts)
     # session.close()
 
-    query = find_evth(req_dicts)
+    query = find_evth(req_dicts, 'data')
 
     with engine.connect() as con:
         results = con.execute(query)
 
-    result.res_dicts = dicter(results, cols_list)
-    return render_template('result.html', results=result.res_dicts,
-                           isinst=isinstance, lst=list)
+    res_dicts = dicter(results, cols_list)
+    return render_template('result.html', results=res_dicts)
 
 @app.route('/upload')
 def upload():
@@ -283,7 +283,7 @@ def res_corp():
 
 @app.route('/get_file', methods=['get'])
 def get_file():
-    res = result.res_dicts
+    res = res_dicts
     #print(res)
     with open("FW_GUI_results.csv", 'w') as file:
         writer = csv.writer(file)
