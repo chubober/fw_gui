@@ -10,17 +10,21 @@ from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 # from sqlalchemy import create_engine
 
 cards = [{
-        "clause": "щас|r'izan'-cə|er'a-tamə|.",
-        "tr": "",
-        "text": "",
-        "wo": ["LOC V", 'V'],
-        "subj": "pro-1", "obj": "ns", "verb":""
+        'clause': '', 
+        'tr': 'есть', 
+        'text': ['AET_AK_inteview_2013', 'LVJ_AK_280713_oryol_i_mysh', 'TAM_IE_04072014_housekeeping'], 
+        'subj': ['pro-1'], 
+        'obj': ['ns'], 
+        'verb': ['intr'], 
+        'wo': ['V ADV', 'loc']
     }, {
-        "clause": "",
-        "tr": "работала",
-        "text": "",
-        "wo": "",
-        "subj": ['pro-1', 'ns', 'pro1pl'], "obj": "", "verb": ""
+        'clause': '', 
+        'tr': '', 
+        'text': ['AET_AK_inteview_2013'], 
+        'subj': ['pro-1'], 
+        'obj': ['ns'], 
+        'verb': ['intr'], 
+        'wo': ['V ADV', 'loc']
     }]
 
 
@@ -38,7 +42,7 @@ def find_evth(cards):
     for key, value in card.items():
       if value == "":
         continue
-      if key == 'clause' or key == 'tr':
+      if type(value) is str:
         new_val = "lower("+key+")" + " like lower('%%" + replace_quot_sql(value) + "%%')"
       elif type(value) is list:
         new_val = ""
@@ -49,8 +53,6 @@ def find_evth(cards):
         if new_val != "":
           new_val ="("+new_val+ ")"
           #where += l_val
-      else:
-        new_val = key + "= '"+replace_quot_sql(value)+"'"
       if new_val != "":
         if where != "":
           where += " and "
@@ -67,3 +69,5 @@ def find_evth(cards):
 
 def replace_quot_sql(t):
   return str(t.replace("'", "''"))
+
+#print(find_evth(cards))

@@ -40,7 +40,8 @@ def create_corp_table(id, cols):
     new_col = f' "{str(elem)}" text'
     if st != "":
       st+= ', '
-    st += new_col
+    st += new_col.lower()
+  #print(st)
   query = f"""CREATE TABLE IF NOT EXISTS corp_{id} ( {st} )"""
   cursor.execute(query)
   connection.commit()
