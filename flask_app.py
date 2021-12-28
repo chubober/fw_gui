@@ -52,7 +52,9 @@ def chunker(req_dict, n, sel_list):
     dict_num = 0
     count = 0
     for k, v in req_dict.items():
-        k = ''.join(filter(str.isalpha, k))
+        # k = ''.join(filter(str.isalpha, k))
+        k = k.split('_', maxsplit=1)[1]
+
         if len(v) == 1 and k not in sel_list:
             v = v[0]
         req_dicts[dict_num][k] = v

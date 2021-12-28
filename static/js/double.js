@@ -12,9 +12,11 @@ $('body').on('click', '.addsection', function() {
 
     //loop through each input
     var section = template.clone().find(':input').each(function(){
-
+        console.log(this.name);
+	console.log(this.name.substring(2));
         //update id
-        this.name = this.name + sectionsCount;
+        this.name = sectionsCount + '_' + this.name.substring(2);
+	    
 
     }).end();
 

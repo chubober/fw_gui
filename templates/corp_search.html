@@ -45,14 +45,14 @@
       {% for text_input in text_list %}
       <div class="form-group">
           <label>{{text_input}}</label>
-          <input class="form-control" name="{{text_input}}" list="{{text_input}}" id="{{text_input}}">
+          <input class="form-control" name="1_{{text_input}}" list="{{text_input}}" id="{{text_input}}">
       </div>
       {% endfor %}
 
       {% for sel_input, rec_list in recs.items() %}
       <div class="form-group">
           <label>{{sel_input}}</label>
-          <select required multiple class="selectpicker" data-actions-box="true" tabindex="-98" name="{{sel_input}}" multiple data-selected-text-format="count" data-width="fit" data-container="body">
+          <select required multiple class="selectpicker" data-actions-box="true" tabindex="-98" name="1_{{sel_input}}" multiple data-selected-text-format="count" data-width="fit" data-container="body">
               {% for rec in rec_list %}
 	            {% if rec == '' %}
               <option selected value="{{ rec }}">Не размечено</option>
