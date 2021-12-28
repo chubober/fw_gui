@@ -186,9 +186,8 @@ def corp_result(corp_id):
 
     req_dict = request.args.to_dict(flat=False)
     req_dicts = chunker(req_dict, cols_num, sel_list)
-
+    #print(req_dicts)
     query = find_evth(req_dicts)
-
     with engine.connect() as con:
         results = con.execute(query)
 
