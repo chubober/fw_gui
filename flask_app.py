@@ -47,13 +47,13 @@ class DF(Base):
     wo = Column(Text)
 
 
-def chunker(req_dict, n):
+def chunker(req_dict, n, sel_list):
     req_dicts = [dict() for i in range(0, len(req_dict), n)]
     dict_num = 0
     count = 0
     for k, v in req_dict.items():
         k = ''.join(filter(str.isalpha, k))
-        if len(v) == 1 and k not in ['text', 'subj', 'obj', 'verb', 'wo']:
+        if len(v) == 1 and k not in sel_list:
             v = v[0]
         req_dicts[dict_num][k] = v
         if count < n-1:
@@ -120,7 +120,6 @@ def main_page():
 @app.route('/<corp_id>')
 def corp_search(corp_id):
     id = int(corp_id.split('_')[1])
-
     cols_query = f'SELECT name, sel_cols, text_cols FROM languages WHERE id = {id}'
 
     with engine.connect() as con:
@@ -149,7 +148,7 @@ def corp_search(corp_id):
     
     text_list = text_cols.split(',')
         
-    return render_template('corp_search.html', recs = recs,
+    return render_template('corp_search.html', recs = recs, corp_id = corp_id,
                             text_list = text_list, corp_name = corp_name)
 
 @app.route('/moksha')
@@ -170,6 +169,32 @@ def moksha():
     return render_template('moksha.html', texts=texts,
                            subjs=subjs, objs=objs,
                            verbs=verbs, wos=wos, messages = {'main':''})
+
+
+@app.route('/<corp_id>/result', methods=['get'])
+def corp_result(corp_id):
+    id = int(corp_id.split('_')[1])
+    cols_query = f'SELECT sel_cols, text_cols FROM languages WHERE id = {id}'
+
+    with engine.connect() as con:
+        cols_res = con.execute(cols_query)
+    
+    sel_cols, text_cols = list(cols_res)[0]
+    sel_list = sel_cols.split(',')
+    text_list = text_cols.split(',')
+    cols_num = len(sel_list) + len(text_list)
+
+    req_dict = request.args.to_dict(flat=False)
+    req_dicts = chunker(req_dict, cols_num, sel_list)
+
+    query = find_evth(req_dicts)
+
+    with engine.connect() as con:
+        results = con.execute(query)
+
+    result.res_dicts = dicter(results)
+    return render_template('corp_result.html', results=result.res_dicts,
+                           isinst=isinstance, lst=list)
 
 
 @app.route('/moksha/result', methods=['get'])
