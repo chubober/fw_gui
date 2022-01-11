@@ -95,7 +95,8 @@ def dicter(records, cols_list):
         dic = {}
         for col in cols_list:
             dic[col] = record_dict[col]
-        dicts.append(dic)
+        if not all(v is None for v in dic.values()):
+            dicts.append(dic)
     return dicts
 
 
