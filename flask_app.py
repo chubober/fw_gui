@@ -173,6 +173,7 @@ def moksha():
 
 @app.route('/<corp_id>/result', methods=['get'])
 def corp_result(corp_id):
+    #print(corp_id)
     id = int(corp_id.split('_')[1])
 
     cols_query = f'SELECT sel_cols, text_cols FROM languages WHERE id = {id}'
@@ -183,18 +184,18 @@ def corp_result(corp_id):
     sel_cols, text_cols = list(cols_res)[0]
     sel_list = sel_cols.split(',')
     text_list = text_cols.split(',')
-    cols_list = text_list + sel_list
+    result.cols_list = text_list + sel_list
 
     req_dict = request.args.to_dict(flat=False)
-    req_dicts = chunker(req_dict, len(cols_list), sel_list)
+    req_dicts = chunker(req_dict, len(result.cols_list), sel_list)
     #print(req_dicts)
     query = find_evth(req_dicts, corp_id)
     #print(query)
     with engine.connect() as con:
         results = con.execute(query)
 
-    res_dicts = dicter(results, cols_list)
-    return render_template('result.html', results=res_dicts)
+    result.res_dicts = dicter(results, result.cols_list)
+    return render_template('result.html', results=result.res_dicts, cols = result.cols_list)
 
 
 @app.route('/moksha/result', methods=['get'])
@@ -285,13 +286,25 @@ def res_corp():
 
 @app.route('/get_file', methods=['get'])
 def get_file():
-    res = res_dicts
-    #print(res)
+    res = result.res_dicts
+    cols = result.cols_list
+    print(cols)
+    with open("FW_GUI_results.csv", 'w') as file:
+
+        #writer = csv.writer(file, fieldnames=cols)
+        writer = csv.DictWriter(file, delimiter = ",", 
+                                 lineterminator="\r", fieldnames=cols)
+        writer.writeheader()
+        #writer.writerow(cols)
+        for elem in res:
+            writer.writerow(elem)
+    '''          
     with open("FW_GUI_results.csv", 'w') as file:
         writer = csv.writer(file)
-        writer.writerow(('id', 'clause', 'tr', 'text', 'subj', 'obj', 'verb', 'wo'))
+        #writer.writerow(('id', 'clause', 'tr', 'text', 'subj', 'obj', 'verb', 'wo'))
         for dic in res:
             writer.writerow((dic['id'],dic['clause'],dic['tr'],dic['text'], dic['subj'], dic['obj'], dic['verb'], dic['wo']))
+            '''
     return send_file('./FW_GUI_results.csv')
     #return redirect(url_for('main_page'))
 
