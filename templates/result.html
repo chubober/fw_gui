@@ -38,16 +38,18 @@
     <br>
     <a href = "/get_file">Download in csv</a>
   </div>
-  
+  <br>
   {% for result in results %}
-  <div class="card">
+  <div class="container card bg-light w-75 mb-3">
+    <div class="card-body">
     {% for key in result %}
     {% if result[key] and result[key] != [''] %}
-        <div class="container">
-            {{ key }}: {{ result[key] }}
-        </div>
+      <p class="card-text">
+        <b>{{ key }}:</b> {{ result[key] }}
+      </p>
     {% endif %}
     {% endfor %}
+    </div>
   </div>
   {% endfor %}
   {% endif %}

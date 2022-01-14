@@ -205,11 +205,11 @@ def result():
     Session = sessionmaker(bind=engine)
     session = Session()
 
-    cols_list = ['clause', 'tr', 'text', 'subj', 'obj', 'verb', 'wo']
+    result.cols_list = ['clause', 'tr', 'text', 'subj', 'obj', 'verb', 'wo']
     sel_list = ['text', 'subj', 'obj', 'verb', 'wo']
 
     req_dict = request.args.to_dict(flat=False)
-    req_dicts = chunker(req_dict, len(cols_list), sel_list)
+    req_dicts = chunker(req_dict, len(result.cols_list), sel_list)
     # results = search_by_parameters(session, req_dicts)
     # session.close()
 
@@ -218,8 +218,8 @@ def result():
     with engine.connect() as con:
         results = con.execute(query)
 
-    res_dicts = dicter(results, cols_list)
-    return render_template('result.html', results=res_dicts)
+    result.res_dicts = dicter(results, result.cols_list)
+    return render_template('result.html', results=result.res_dicts, cols = result.cols_list)
 
 @app.route('/upload')
 def upload():
