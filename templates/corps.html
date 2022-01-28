@@ -42,50 +42,14 @@
 
 
   <!-- Page Content -->
-{% for cat, msg in get_flashed_messages(True) %}
-<div class = 'flash {{cat}}'>{{msg}}</div>
-{% endfor %}
-<br>
-<h1 class="text-center">{{corp_name}}</h1>
-<form action="{{url_for('corp_result', corp_id=corp_id)}}" target="_blank" method="GET" autocomplete="off" class="container-fluid mt-xl-4">
-  <div id="sections" class="row flex-row flex-nowrap scroll">
-    <div class="col col-md-4 col-12 section card pt-xl-3">
-
-      {% for text_input in text_list %}
-      <div class="form-group">
-          <label>{{text_input}}</label>
-          <input class="form-control" name="1_{{text_input}}" list="{{text_input}}" id="{{text_input}}">
-      </div>
-      {% endfor %}
-
-      {% for sel_input, rec_list in recs.items() %}
-      <div class="form-group">
-          <label>{{sel_input}}</label>
-          <select required multiple class="selectpicker" data-actions-box="true" tabindex="-98" name="1_{{sel_input}}" multiple data-selected-text-format="count" data-width="fit" data-container="body">
-              {% for rec in rec_list %}
-	            {% if rec == '' %}
-              <option selected value="{{ rec }}">Не размечено</option>
-              {% else %}
-              <option selected value="{{ rec }}">{{ rec }}</option>
-              {% endif %}
-              {% endfor %}
-          </select>
-      </div>
-      {% endfor %}
-
-      <div class="form-group">
-        <button type="button" class='btn btn-danger remove'>remove section</button>
-        <button type="button" class="btn btn-primary addsection">add section</button>
-      </div>
-
-    </div>
-  </div>
-
   <br>
-    <div class="d-flex justify-content-start">
-      <button type="submit" class="btn btn-success">search</button>
-    </div>
-  </form>
+  <div class="text-center">
+    <p>Available corpora!</p>
+    <h3><a href="{{url_for('moksha')}}">Moksha</a></h3>
+    {% for corp_link, corp_name in corp_data %}
+    <h3><a href={{corp_link}}>{{corp_name}}</a></h3>
+    {% endfor %}
+  </div>
 
   <!-- Initialize the plugin: -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

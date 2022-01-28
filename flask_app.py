@@ -102,6 +102,12 @@ def dicter(records, cols_list):
 
 @app.route('/')
 def main_page():
+
+    return render_template('index.html')
+
+
+@app.route('/corps')
+def corps():
     corp_data = []
 
     query = 'SELECT id, name FROM languages WHERE name IS NOT NULL'
@@ -112,7 +118,7 @@ def main_page():
     for entry in res:
         corp_data.append(('/corp_' + str(entry[0]), entry[1]))
 
-    return render_template('index.html', corp_data=corp_data)
+    return render_template('corps.html', corp_data=corp_data)
 
 
 @app.route('/<corp_id>')
