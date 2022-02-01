@@ -4,7 +4,8 @@ import os
 from pandas.io import json
 from search import find_evth
 from dl_insert_data import main, check_file, insert_values_metadata
-# import gspread
+import gspread
+from gspread_dataframe import get_as_dataframe, set_with_dataframe
 from sqlalchemy import func
 from sqlalchemy import create_engine
 from sqlalchemy import Column, Integer, Text
@@ -18,21 +19,25 @@ import csv
 # import plotly
 # import plotly.express as px
 import json
-# from oauth2client.service_account import ServiceAccountCredentials
+import apiclient.discovery
+from oauth2client.service_account import ServiceAccountCredentials
 
 app = Flask(__name__)
-
 
 engine = create_engine('postgresql+psycopg2://lingvist:lingvistpassword@178.154.193.115:5432/mydatabase')
 
 Base = declarative_base()
 
-# scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
-# credentials = ServiceAccountCredentials.from_json_keyfile_name('fw-gui-creds.json', scope)
-# client = gspread.authorize(credentials)
-# sheet = client.open_by_key('1FCJWHM149zndo3i4iTXyXV6CJD3lujJarHSk6h8e5Qw')
-# dataframe = pd.DataFrame(sheet.get_all_records())
 app.secret_key = 'rgrwfgkfm5mterfmesmf5k4efmlrkltt5FGTvvtgtgrFTY'
+
+CREDENTIALS_FILE = 'fw-gui-creds.json'
+
+scope = ['https://spreadsheets.google.com/feeds',
+         'https://www.googleapis.com/auth/drive']
+credentials = ServiceAccountCredentials.from_json_keyfile_name(
+    'fw-gui-creds.json', scope
+)
+gc = gspread.authorize(credentials)
 
 class DF(Base):
     __tablename__ = 'data'
@@ -315,6 +320,23 @@ def get_file():
     return send_file('./FW_GUI_results.csv')
     #return redirect(url_for('main_page'))
 
+@app.route('/to_gsheet', methods=['get'])
+def to_gsheet():
+    res = result.res_dicts
+
+    df = pd.DataFrame(res)
+    n_rows = len(df) + 1
+    n_cols = len(df.columns)
+
+    sh = gc.create('Search results')
+    sh.share('', perm_type='anyone', role='writer')
+
+    spreadsheet = gc.open('Search results')
+    worksheet = spreadsheet.add_worksheet('search results', rows=n_rows, cols=n_cols)
+    spreadsheet.del_worksheet(spreadsheet.sheet1)
+    set_with_dataframe(worksheet, df)
+
+    return redirect(sh.url)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=80)
