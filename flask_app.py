@@ -100,7 +100,8 @@ def dicter(records, cols_list):
         dic = {}
         for col in cols_list:
             dic[col] = record_dict[col]
-        dicts.append(dic)
+        if not all(v is None for v in dic.values()):
+            dicts.append(dic)
     return dicts
 
 
@@ -332,7 +333,7 @@ def to_gsheet():
     set_with_dataframe(worksheet, df)
 
     return redirect(sh.url)
-    
+
 @app.route('/get_stats', methods=['get'])
 def get_stats():
     data = result.res_dicts

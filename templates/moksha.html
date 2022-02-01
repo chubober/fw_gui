@@ -54,18 +54,18 @@
       <div class="form-row">
           <div class="form-group col-md-6">
               <label>clause</label>
-              <input class="form-control" name="clause" list="clause" id="main input">
+              <input class="form-control" name="1_clause" list="clause" id="main input">
           </div>
       
           <div class="form-group col-md-6">
               <label>translation</label>
-              <input class="form-control" name="tr" list="tr" id="translation">
+              <input class="form-control" name="1_tr" list="tr" id="translation">
           </div>
       </div>
 
       <div class="form-group">
           <label>sources</label>
-          <select required multiple class="selectpicker" data-actions-box="true" tabindex="-98" name="text" multiple data-selected-text-format="count" data-width="fit" data-container="body">
+          <select required multiple class="selectpicker" data-actions-box="true" tabindex="-98" name="1_text" multiple data-selected-text-format="count" data-width="fit" data-container="body">
               {% for text in texts %}
 	            {% if text == '' %}
               <option selected value="{{ text }}">Не размечено</option>
@@ -78,7 +78,7 @@
 
       <div class="form-group">
           <label>subject</label>
-          <select required multiple class="selectpicker" id="subj" name="subj" data-actions-box="true" tabindex="-98" name="text" multiple data-selected-text-format="count" data-width="fit" data-container="body">
+          <select required multiple class="selectpicker" id="subj" name="1_subj" data-actions-box="true" tabindex="-98" multiple data-selected-text-format="count" data-width="fit" data-container="body">
               {% for subj in subjs %}
               {% if subj == '' %}
 		          <option selected value="{{ subj }}">Не размечено</option>
@@ -91,7 +91,7 @@
 
       <div class="form-group">
           <label>verb</label>
-          <select required multiple class="selectpicker" id="verb" name="verb" data-actions-box="true" tabindex="-98" name="text" multiple data-selected-text-format="count" data-width="fit" data-container="body">
+          <select required multiple class="selectpicker" id="verb" name="1_verb" data-actions-box="true" tabindex="-98" multiple data-selected-text-format="count" data-width="fit" data-container="body">
               {% for verb in verbs %}
               {% if verb == '' %}
               <option selected value="{{ verb }}">Не размечено</option>
@@ -104,7 +104,7 @@
       
       <div class="form-group">
           <label>object</label>
-          <select required multiple class="selectpicker" id="obj" name="obj" data-actions-box="true" tabindex="-98" name="text" multiple data-selected-text-format="count" data-width="fit" data-container="body">
+          <select required multiple class="selectpicker" id="obj" name="1_obj" data-actions-box="true" tabindex="-98" multiple data-selected-text-format="count" data-width="fit" data-container="body">
               {% for obj in objs %}
               {% if obj == '' %}
               <option selected value="{{ obj }}">Не размечено</option>
@@ -117,7 +117,7 @@
 
       <div class="form-group">
           <label>word order</label>
-          <select required multiple class="selectpicker" id="wo" name="wo" data-actions-box="true" tabindex="-98" name="text" multiple data-selected-text-format="count" data-width="fit" data-container="body">
+          <select required multiple class="selectpicker" id="wo" name="1_wo" data-actions-box="true" tabindex="-98" multiple data-selected-text-format="count" data-width="fit" data-container="body">
               {% for wo in wos %}
               {% if wo == '' %}
               <option selected value="{{ wo }}">Не размечено</option>
