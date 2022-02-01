@@ -95,8 +95,7 @@ def dicter(records, cols_list):
         dic = {}
         for col in cols_list:
             dic[col] = record_dict[col]
-        if not all(v is None for v in dic.values()):
-            dicts.append(dic)
+        dicts.append(dic)
     return dicts
 
 
@@ -183,12 +182,12 @@ def corp_result(corp_id):
         cols_res = con.execute(cols_query)
     
     sel_cols, text_cols = list(cols_res)[0]
-    sel_list = sel_cols.split(',')
-    text_list = text_cols.split(',')
-    result.cols_list = text_list + sel_list
+    result.sel_list = sel_cols.split(',')
+    result.text_list = text_cols.split(',')
+    result.cols_list = result.text_list + result.sel_list
 
     req_dict = request.args.to_dict(flat=False)
-    req_dicts = chunker(req_dict, len(result.cols_list), sel_list)
+    req_dicts = chunker(req_dict, len(result.cols_list), result.sel_list)
     #print(req_dicts)
     query = find_evth(req_dicts, corp_id)
     #print(query)
@@ -196,6 +195,7 @@ def corp_result(corp_id):
         results = con.execute(query)
 
     result.res_dicts = dicter(results, result.cols_list)
+    
     return render_template('result.html', results=result.res_dicts, cols = result.cols_list)
 
 
@@ -205,11 +205,11 @@ def result():
     Session = sessionmaker(bind=engine)
     session = Session()
 
-    result.cols_list = ['clause', 'tr', 'text', 'subj', 'obj', 'verb', 'wo']
+    cols_list = ['clause', 'tr', 'text', 'subj', 'obj', 'verb', 'wo']
     sel_list = ['text', 'subj', 'obj', 'verb', 'wo']
 
     req_dict = request.args.to_dict(flat=False)
-    req_dicts = chunker(req_dict, len(result.cols_list), sel_list)
+    req_dicts = chunker(req_dict, len(cols_list), sel_list)
     # results = search_by_parameters(session, req_dicts)
     # session.close()
 
@@ -218,8 +218,8 @@ def result():
     with engine.connect() as con:
         results = con.execute(query)
 
-    result.res_dicts = dicter(results, result.cols_list)
-    return render_template('result.html', results=result.res_dicts, cols = result.cols_list)
+    res_dicts = dicter(results, cols_list)
+    return render_template('result.html', results=res_dicts)
 
 @app.route('/upload')
 def upload():
@@ -284,33 +284,36 @@ def res_corp():
     flash("Please attach a file!", category = 'error')
     return redirect(request.referrer)
 
-
-@app.route('/get_file', methods=['get'])
-def get_file():
+def save_res():
     res = result.res_dicts
+    #print(res)
     cols = result.cols_list
-    print(cols)
+    #print(cols)
     with open("FW_GUI_results.csv", 'w') as file:
-
-        #writer = csv.writer(file, fieldnames=cols)
         writer = csv.DictWriter(file, delimiter = ",", 
                                  lineterminator="\r", fieldnames=cols)
         writer.writeheader()
         #writer.writerow(cols)
         for elem in res:
             writer.writerow(elem)
-    '''          
-    with open("FW_GUI_results.csv", 'w') as file:
-        writer = csv.writer(file)
-        #writer.writerow(('id', 'clause', 'tr', 'text', 'subj', 'obj', 'verb', 'wo'))
-        for dic in res:
-            writer.writerow((dic['id'],dic['clause'],dic['tr'],dic['text'], dic['subj'], dic['obj'], dic['verb'], dic['wo']))
-            '''
+    return(file.name)
+@app.route('/get_file', methods=['get'])
+def get_file():
+    save_res()
     return send_file('./FW_GUI_results.csv')
     #return redirect(url_for('main_page'))
+
+@app.route('/get_stats', methods=['get'])
+def get_stats():
+    data = result.res_dicts
+    text_list = result.text_list
+    #print(sel_list)
+    for elem in data:
+        [elem.pop(key) for key in text_list]
+    #print(all_data)    
+    return (render_template('stats.html', data = data, sel_cols = result.sel_list ))
 
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=80)
-
 

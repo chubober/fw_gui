@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+  
+    <title>FW GUI</title>
+  
+    <!-- Bootstrap core CSS -->
+    <link href="/static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href = "/static/css/styles.css" rel="stylesheet">
+    <link rel="stylesheet" href="static/css/dc.css">
+    <style>h4 {
+        font-weight:normal;
+        color: #2E4053;
+        font-family: 'Lato', sans-serif;
+        font-size: 24px;
+        }
+        h4 span {
+            font-size: 14px;
+            font-family: 'Lato', sans-serif;
+        }</style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
+        <div class="container">
+          <a class="navbar-brand" href="/">FW GUI</a>
+          <a class="navbar-brand" href="/upload">Upload data</a>
+        </div>
+    </nav>
+    <div class = "container-fluid">
+    <div>
+        <div class="dc-data-count">
+            <span class="filter-count"></span> selected out of <span class="total-count"></span> records | <a
+                href="javascript:dc.filterAll(); dc.renderAll();">Reset All</a>
+        </div>
+    </div>
+      <table class="table table-hover dc-data-table">
+      </table>
+    {% for col in sel_cols %}
+    <div id="{{col}}">
+        <h4 >Chart for {{col}} 
+            <span class="reset" style="display: none;"> | Selected: <span class="filter"></span></span>
+    <!--<a class="reset" href="javascript:chart.filterAll();dc.redrawAll();" style="display: none;">reset</a>-->
+
+    <div class="clearfix"></div>
+	</div>
+    </h4>
+    {% endfor %}
+</div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crossfilter/1.3.12/crossfilter.js"></script>   
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/dc/1.7.0/dc.js"></script>
+
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
+    <script type="text/javascript">
+    
+    // The new data variable.
+    var data = getData({{data|tojson}});
+    //var data = all_data.slice(0,200)
+    console.log(data)
+    cols = []
+    for (const key of Object.keys(data[0])) {cols.push(key)}
+    
+    console.log(cols)
+    dictt = {}
+    charts = []
+    var ndx = crossfilter(data),
+        all = ndx.groupAll(),
+        visCount = dc.dataCount(".dc-data-count");
+		//visTable = dc.dataTable(".dc-data-table");
+
+    cols.forEach(colname => {
+        var chart = dc.rowChart("#"+ colname)
+        var colDim = ndx.dimension(function (d) {(d[colname] == null) ? d[colname] = 'Not defined': d[colname]; return d[colname]; });
+        console.log(colDim)
+        var colGroupCount = colDim.group().reduceCount(function(d) { return d[colname]; });
+        chart.width(500).height(320).margins({top: 10, right: 50, bottom: 30, left: 50}).dimension(colDim).group(colGroupCount).label(function (d){return d.key;})
+            .title(function(d){return d.value;}).gap(15).elasticX(true);
+    });
+    visCount
+        .dimension(ndx)
+        .group(all);
+    /*
+	visTable
+		.dimension(dateDim)
+        .group(function (d) {
+            var format = d3.format('02d');
+            return d.Timestamp.getFullYear() + '/' + format((d.Timestamp.getMonth() + 1));
+        })
+				.columns([
+					"Timestamp",
+					"car-id",
+					"car-type",
+					"gate-name"
+					]);
+                    */
+    dc.renderAll()
+
+    function getData(vars){
+        return vars
+    }
+
+/*
+    cols.forEach((col, i)=> myFunc(data,col))
+    //charts.forEach((chart, i) => myFunc(data,chart))
+    dc.renderAll('my_group')
+
+    function getData(vars){
+        return vars
+    }
+
+    // The following code was contained in the callback function.
+    function myFunc(vars, col) {
+        //all_charts = []
+        var chart = dc.rowChart("#" + col.toString(), 'my_group')
+        console.log(col)
+        var ndx = crossfilter(vars);
+        var all = ndx.groupAll();
+
+        var colDim = ndx1.dimension(function (d) { console.log(d[col]); return d[col]; });
+
+        var colGroupSum = colDim.group()
+        .reduceSum(function(d) { return d[col]; });
+        var colGroupCount = colDim.group()
+        .reduceCount(function(d) { return d[col]; });
+        //console.log(colDim)
+        //console.log(chart_name)
+        chart
+            .width(480)
+            //.height(150)
+            //.margins({top: 10, right: 10, bottom: 20, left: 40})
+            .dimension(colDim)
+            .group(colGroupCount)
+            .label(function (d){
+            return d.key;
+            })
+            .title(function(d){return d.value;})
+            //.xAxis().ticks(4)
+            //.transitionDuration(500)
+            //.centerBar(true)
+            .gap(20)
+            //.x(d3.scale.linear().domain([0.5, 7.5]))
+            .elasticX(true);
+            //.xAxis().tickFormat();
+        console.log(chart)
+        //all_charts.push(chart)
+        //dc.redrawAll('my_group')
+    }
+    */
+    </script>
+</body>
+</html>
