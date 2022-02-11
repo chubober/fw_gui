@@ -260,10 +260,11 @@ def end_of_new_upl():
         corp_name = request.form.get('name')
         sel_cols = request.form.getlist('sel_cols')
         text_cols = request.form.getlist('text_cols')
+        email = request.form.get('email')
         id = int(corp_id.split('_')[1])
         sel = ','.join(sel_cols)
         text = ','.join(text_cols)
-        print(corp_name, sel, text, id)
+        print(email, corp_name, sel, text, id)
         insert_values_metadata(id, corp_name, sel, text)
     return redirect(url_for('main_page'))    
     
@@ -325,7 +326,8 @@ def to_gsheet():
     n_cols = len(df.columns)
 
     sh = gc.create('Search results')
-    sh.share('', perm_type='anyone', role='writer')
+    sh.share('', perm_type='anyone', role='reader')
+    sh.share('saltymon@gmail.com', perm_type='user', role='owner')
 
     spreadsheet = gc.open('Search results')
     worksheet = spreadsheet.add_worksheet('search results', rows=n_rows, cols=n_cols)
