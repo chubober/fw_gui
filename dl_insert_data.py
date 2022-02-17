@@ -53,7 +53,8 @@ def create_metatable():
     id serial PRIMARY KEY,
     name VARCHAR(255),
     sel_cols VARCHAR(255),
-    text_cols VARCHAR(255)
+    text_cols VARCHAR(255),
+    perm_id VARCHAR(255)
     )"""
   cursor.execute(query)
   connection.commit()
@@ -67,8 +68,8 @@ def insert_new_line():
   res = cursor.fetchall()
   return res[0][0]
 
-def insert_values_metadata(id, name, sel_cols, text_cols):
-  query = f"update languages set name = '{name}', sel_cols = '{sel_cols}', text_cols = '{text_cols}' where id = {id} "
+def insert_values_metadata(id, name, sel_cols, text_cols, perm_id):
+  query = f"update languages set name = '{name}', sel_cols = '{sel_cols}', text_cols = '{text_cols}', perm_id = '{perm_id}' where id = {id} "
   cursor.execute(query)
   connection.commit()
 

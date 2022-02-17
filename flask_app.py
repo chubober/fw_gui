@@ -202,13 +202,13 @@ def corp_result(corp_id):
     req_dicts = chunker(req_dict, len(result.cols_list), result.sel_list)
     #print(req_dicts)
     query = find_evth(req_dicts, corp_id)
-    #print(query)
+    # print(query)
     with engine.connect() as con:
         results = con.execute(query)
 
     result.res_dicts = dicter(results, result.cols_list)
     
-    return render_template('result.html', results=result.res_dicts, cols = result.cols_list)
+    return render_template('result.html', results=result.res_dicts, cols = result.cols_list, corp_id=corp_id, query=query)
 
 
 @app.route('/moksha/result', methods=['get'])
@@ -260,13 +260,20 @@ def end_of_new_upl():
         corp_name = request.form.get('name')
         sel_cols = request.form.getlist('sel_cols')
         text_cols = request.form.getlist('text_cols')
-        email = request.form.get('email')
         id = int(corp_id.split('_')[1])
         sel = ','.join(sel_cols)
         text = ','.join(text_cols)
-        print(email, corp_name, sel, text, id)
-        insert_values_metadata(id, corp_name, sel, text)
-    return redirect(url_for('main_page'))    
+        
+        sh = gc.create(f'{corp_name} permissions blank')
+        sh.share('', perm_type='anyone', role='writer', with_link=True)
+
+        perm_id = sh.id
+        spreadsheet = gc.open_by_key(perm_id)
+        worksheet = spreadsheet.add_worksheet('blank')
+        worksheet.update('A1', 'please use the «Share» function to set permissions')
+
+        insert_values_metadata(id, corp_name, sel, text, perm_id)
+    return redirect(sh.url)    
     
 
 @app.route('/res_corp', methods=['post'])
@@ -317,8 +324,8 @@ def get_file():
     return send_file('./FW_GUI_results.csv')
     #return redirect(url_for('main_page'))
 
-@app.route('/to_gsheet', methods=['get'])
-def to_gsheet():
+@app.route('/read_gsheet', methods=['get'])
+def read_gsheet():
     res = result.res_dicts
 
     df = pd.DataFrame(res)
@@ -327,7 +334,7 @@ def to_gsheet():
 
     sh = gc.create('Search results')
     sh.share('', perm_type='anyone', role='reader')
-    sh.share('saltymon@gmail.com', perm_type='user', role='owner')
+    # sh.share('saltymon@gmail.com', perm_type='user', role='owner')
 
     spreadsheet = gc.open('Search results')
     worksheet = spreadsheet.add_worksheet('search results', rows=n_rows, cols=n_cols)
@@ -346,6 +353,42 @@ def get_stats():
     #print(all_data)    
     return (render_template('stats.html', data = data, sel_cols = result.sel_list ))
 
+@app.route('/edit_gsheet', methods=['post'])
+def edit_gsheet():
+    # res = result.res_dicts
+
+    if request.method == 'POST':
+        corp_id = request.form.get('corp_id')
+        query = request.form.get('query')
+
+    with engine.connect() as con:
+        df = pd.read_sql_query(query, con)
+    n_rows = len(df) + 1
+    n_cols = len(df.columns)
+
+    id = int(corp_id.split('_')[1])
+    perm_query = f'SELECT perm_id FROM languages WHERE id = {id}'
+
+    with engine.connect() as con:
+        perm_res = con.execute(perm_query)
+
+    perm_id = list(perm_res)[0][0]
+    perm_list = gc.list_permissions(perm_id)
+    # print(perm_list)
+
+    sh = gc.create('Search results')
+    for user in perm_list:
+        if 'emailAddress' in user:
+            sh.share(user['emailAddress'], perm_type=user['type'], role=user['role'], notify=False)
+    sh.share('', perm_type='anyone', role='reader')
+    # sh.share('saltymon@gmail.com', perm_type='user', role='owner')
+
+    spreadsheet = gc.open('Search results')
+    worksheet = spreadsheet.add_worksheet('search results', rows=n_rows, cols=n_cols)
+    spreadsheet.del_worksheet(spreadsheet.sheet1)
+    set_with_dataframe(worksheet, df)
+
+    return redirect(sh.url)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=80)

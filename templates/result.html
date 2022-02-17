@@ -42,14 +42,25 @@
     </div>
   {% else %}
   <div id='chart' class='chart'></div>
-  <div class = "amount">
-    Всего нашлось {{results | length}} вхождений
-    <br>
-    <span>
-      <a href = "/get_file">Download in .csv</a> |
-      <a href = "/to_gsheet" target="blank">Open in Google Sheets</a> |
-      <a href = "/get_stats">See statistics</a>
-    </span>
+  <div class = "amount container-fluid">
+    <div class="row">
+      <div class="col-8 amount_text">
+      Всего нашлось {{results | length}} вхождений
+      <br>
+      <span>
+        <a href = "/get_file">Download in .csv</a> |
+        <a href = "/read_gsheet" target="_blank">Read in Google Sheets</a> |
+        <a href = "/get_stats">See statistics</a>
+      </span>
+      </div>
+      <div class="col-4">
+        <form action = "{{url_for('edit_gsheet')}}" target="_blank" method="post">
+          <input readonly name="corp_id" class="d-none" value="{{ corp_id }}">
+          <input readonly name="query" class="d-none" value="{{ query }}">
+          <input type="submit" class="btn btn-outline-success float-right" value="Edit in Google Sheets">
+        </form>
+      </div>
+    </div>
   </div>
   <br>
   {% for result in results %}

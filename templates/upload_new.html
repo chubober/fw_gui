@@ -20,7 +20,7 @@
 
     <link rel="stylesheet" href="/static/css/boxit.css" type="text/css">
     <link rel="stylesheet" href="/static/css/styles.css" type="text/css">
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <!-- <script src="https://accounts.google.com/gsi/client" async defer></script> -->
     <script>
    function deleteName(f) {
     if (confirm("Вы уверены, что хотите удалить выделенный пункт?\nЭта операция не восстановима."))
@@ -53,7 +53,7 @@
   {% endfor %}
   <br>
   <h3 class="ml-3">new corpus</h3>
-  <form action = "{{url_for('end_of_new_upl')}}"  method="post" autocomplete="off" class="container-fluid" enctype="multipart/form-data">
+  <form action = "{{url_for('end_of_new_upl')}}" method="post" autocomplete="off" class="container-fluid" enctype="multipart/form-data">
 
   <div class="form-group col-md-3">
     <label>DB table name</label>
@@ -84,22 +84,23 @@
     </select>
   </div>
 
-  <div class="form-group col-md-3">
+  <!-- <div class="form-group col-md-3">
     <label>owner authorization</label>
     <div id="g_id_onload"
          data-client_id="234953357169-ujahbde96iaii1gsmu1a528k8kkghtnf.apps.googleusercontent.com"
          data-callback="handleCredentialResponse">
     </div>
     <div class="g_id_signin" data-type="standard"></div>
-  </div>
+  </div> -->
 
-  <input hidden name="email" id="email">
+  <!-- <input hidden name="email" id="email"> -->
+  <p>You will be redirected to a blank spreadsheet, where you can set permissions.</p>
   <input class="submit" type="submit" name="submit" value="upload new corpus">
   </form>
 
   <!-- <script src="/static/js/jwt-decode.js"></script> -->
   
-  <script>
+  <!-- <script>
     function parseJwt (token) {
       var base64Url = token.split('.')[1];
       var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
@@ -116,7 +117,7 @@
       const responsePayload = parseJwt(response.credential);
       inputF.value = responsePayload.email;
     }
-  </script>
+  </script> -->
   <script  src="/static/js/options.js" crossorigin></script>
 </body>
 </html>
