@@ -269,8 +269,9 @@ def end_of_new_upl():
 
         perm_id = sh.id
         spreadsheet = gc.open_by_key(perm_id)
-        worksheet = spreadsheet.add_worksheet('blank')
+        worksheet = spreadsheet.add_worksheet('blank', rows=1, cols=1)
         worksheet.update('A1', 'please use the «Share» function to set permissions')
+        spreadsheet.del_worksheet(spreadsheet.sheet1)
 
         insert_values_metadata(id, corp_name, sel, text, perm_id)
     return redirect(sh.url)    
