@@ -178,6 +178,12 @@ def check_file(filename):
       return True
   return False
 
+def add_primary(id):
+  query = f"""ALTER TABLE corp_{id} ADD COLUMN ID SERIAL PRIMARY KEY"""
+  cursor.execute(query)
+  connection.commit()
+  return
+
 
 
 def main(filename):
@@ -193,6 +199,7 @@ def main(filename):
   names, data = col_names(filename)
   create_corp_table(id, names)
   insert_into_corp_table(data, id)
+  add_primary(id)
 
   #return
   return(f'corp_{id}')

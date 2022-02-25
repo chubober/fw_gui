@@ -1,5 +1,6 @@
 from flask.helpers import flash, send_file
 import pandas as pd
+import numpy as np
 import os
 from pandas.io import json
 from search import find_evth
@@ -11,6 +12,7 @@ from sqlalchemy import create_engine
 from sqlalchemy import Column, Integer, Text
 from sqlalchemy.sql.expression import any_
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.orm import session, sessionmaker
 from ordered_set import OrderedSet as ordset
 from flask import Flask, render_template, request, redirect, sessions, url_for
@@ -21,6 +23,9 @@ import csv
 import json
 import apiclient.discovery
 from oauth2client.service_account import ServiceAccountCredentials
+import schedule
+import time
+import threading
 
 app = Flask(__name__)
 
@@ -103,6 +108,65 @@ def dicter(records, cols_list):
         if not all(v is None for v in dic.values()):
             dicts.append(dic)
     return dicts
+
+
+def replace(table, conn, keys, data_iter):
+    data = [dict(zip(keys, row)) for row in data_iter]
+
+    stmt = insert(table.table).values(data)
+    update_stmt = stmt.on_conflict_do_update(index_elements=['id'], 
+                                            set_=dict(zip(stmt.excluded.keys(), 
+                                            stmt.excluded.values())))
+
+    conn.execute(update_stmt)
+
+
+def corp_update(corp_id, sh_id, wsh_id):
+    spreadsheet = gc.open_by_key(sh_id)
+    worksheet = spreadsheet.get_worksheet_by_id(wsh_id)
+    df = pd.DataFrame(worksheet.get_all_records())
+    with engine.connect() as con:
+        df.to_sql(corp_id, con=con, if_exists='append', index=False, method=replace)
+    
+    query = f'''
+    SELECT column_name
+    FROM INFORMATION_SCHEMA.COLUMNS
+    WHERE TABLE_NAME = N'{corp_id}'
+    '''
+    with engine.connect() as con:    
+        col_names = con.execute(query)
+    col_names = [col_name[0] for col_name in col_names if col_name[0] != 'id']
+
+    with engine.connect() as con:
+        for col in col_names:
+            con.execute(f'UPDATE {corp_id} SET \"{col}\"=NULL where \"{col}\"=\'\'')
+    # print('done')
+    return schedule.CancelJob
+
+
+def run_continuously(interval=1):
+    """Continuously run, while executing pending jobs at each
+    elapsed time interval.
+    @return cease_continuous_run: threading. Event which can
+    be set to cease continuous run. Please note that it is
+    *intended behavior that run_continuously() does not run
+    missed jobs*. For example, if you've registered a job that
+    should run every minute and you set a continuous run
+    interval of one hour then your job won't be run 60 times
+    at each interval but only once.
+    """
+    cease_continuous_run = threading.Event()
+
+    class ScheduleThread(threading.Thread):
+        @classmethod
+        def run(cls):
+            while not cease_continuous_run.is_set():
+                schedule.run_pending()
+                time.sleep(interval)
+
+    continuous_thread = ScheduleThread()
+    continuous_thread.start()
+    return cease_continuous_run
 
 
 @app.route('/')
@@ -200,7 +264,7 @@ def corp_result(corp_id):
 
     req_dict = request.args.to_dict(flat=False)
     req_dicts = chunker(req_dict, len(result.cols_list), result.sel_list)
-    #print(req_dicts)
+    # print(req_dicts)
     query = find_evth(req_dicts, corp_id)
     # print(query)
     with engine.connect() as con:
@@ -388,6 +452,10 @@ def edit_gsheet():
     worksheet = spreadsheet.add_worksheet('search results', rows=n_rows, cols=n_cols)
     spreadsheet.del_worksheet(spreadsheet.sheet1)
     set_with_dataframe(worksheet, df)
+
+    schedule.every(1).minutes.do(corp_update, corp_id=corp_id, sh_id=spreadsheet.id, wsh_id=worksheet.id)
+    # schedule.every(1).hours.do(corp_update, corp_id=corp_id, sh_id=spreadsheet.id, wsh_id=worksheet.id)
+    stop_run_continuously = run_continuously()
 
     return redirect(sh.url)
 
