@@ -120,10 +120,10 @@ def replace(table, conn, keys, data_iter):
 
     conn.execute(update_stmt)
 
-
-def corp_update(corp_id, sh_id, wsh_id):
+@app.route('/corp_update/<corp_id>/<sh_id>')
+def corp_update(corp_id, sh_id):
     spreadsheet = gc.open_by_key(sh_id)
-    worksheet = spreadsheet.get_worksheet_by_id(wsh_id)
+    worksheet = spreadsheet.get_worksheet(0)
     df = pd.DataFrame(worksheet.get_all_records())
     with engine.connect() as con:
         df.to_sql(corp_id, con=con, if_exists='append', index=False, method=replace)
@@ -141,32 +141,33 @@ def corp_update(corp_id, sh_id, wsh_id):
         for col in col_names:
             con.execute(f'UPDATE {corp_id} SET \"{col}\"=NULL where \"{col}\"=\'\'')
     # print('done')
-    return schedule.CancelJob
+    # return schedule.CancelJob
+    return redirect(url_for('main_page'))
 
 
-def run_continuously(interval=1):
-    """Continuously run, while executing pending jobs at each
-    elapsed time interval.
-    @return cease_continuous_run: threading. Event which can
-    be set to cease continuous run. Please note that it is
-    *intended behavior that run_continuously() does not run
-    missed jobs*. For example, if you've registered a job that
-    should run every minute and you set a continuous run
-    interval of one hour then your job won't be run 60 times
-    at each interval but only once.
-    """
-    cease_continuous_run = threading.Event()
+# def run_continuously(interval=1):
+#     """Continuously run, while executing pending jobs at each
+#     elapsed time interval.
+#     @return cease_continuous_run: threading. Event which can
+#     be set to cease continuous run. Please note that it is
+#     *intended behavior that run_continuously() does not run
+#     missed jobs*. For example, if you've registered a job that
+#     should run every minute and you set a continuous run
+#     interval of one hour then your job won't be run 60 times
+#     at each interval but only once.
+#     """
+#     cease_continuous_run = threading.Event()
 
-    class ScheduleThread(threading.Thread):
-        @classmethod
-        def run(cls):
-            while not cease_continuous_run.is_set():
-                schedule.run_pending()
-                time.sleep(interval)
+#     class ScheduleThread(threading.Thread):
+#         @classmethod
+#         def run(cls):
+#             while not cease_continuous_run.is_set():
+#                 schedule.run_pending()
+#                 time.sleep(interval)
 
-    continuous_thread = ScheduleThread()
-    continuous_thread.start()
-    return cease_continuous_run
+#     continuous_thread = ScheduleThread()
+#     continuous_thread.start()
+#     return cease_continuous_run
 
 
 @app.route('/')
@@ -333,8 +334,10 @@ def end_of_new_upl():
 
         perm_id = sh.id
         spreadsheet = gc.open_by_key(perm_id)
-        worksheet = spreadsheet.add_worksheet('blank', rows=1, cols=1)
-        worksheet.update('A1', 'please use the «Share» function to set permissions')
+        worksheet = spreadsheet.add_worksheet('blank', rows=3, cols=3)
+        worksheet.update('A1', 'Please use the «Share» function to set permissions')
+        main_link = url_for('main_page', _external=True)
+        worksheet.update('B3', f'=HYPERLINK("{main_link}";"MAIN PAGE")', raw=False)
         spreadsheet.del_worksheet(spreadsheet.sheet1)
 
         insert_values_metadata(id, corp_name, sel, text, perm_id)
@@ -453,9 +456,14 @@ def edit_gsheet():
     spreadsheet.del_worksheet(spreadsheet.sheet1)
     set_with_dataframe(worksheet, df)
 
-    schedule.every(1).minutes.do(corp_update, corp_id=corp_id, sh_id=spreadsheet.id, wsh_id=worksheet.id)
+    submit_worksheet = spreadsheet.add_worksheet('submit', rows=3, cols=3)
+    submit_worksheet.update('A1', 'Submit all changes and upload them to corpus:')
+    submit_link = url_for('corp_update', corp_id=corp_id, sh_id=spreadsheet.id, _external=True)
+    submit_worksheet.update('B3', f'=HYPERLINK("{submit_link}";"SUBMIT")', raw=False)
+
+    # schedule.every(1).minutes.do(corp_update, corp_id=corp_id, sh_id=spreadsheet.id, wsh_id=worksheet.id)
     # schedule.every(1).hours.do(corp_update, corp_id=corp_id, sh_id=spreadsheet.id, wsh_id=worksheet.id)
-    stop_run_continuously = run_continuously()
+    # stop_run_continuously = run_continuously()
 
     return redirect(sh.url)
 
