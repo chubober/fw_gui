@@ -264,7 +264,8 @@ def corp_result(corp_id):
 
     req_dict = request.args.to_dict(flat=False)
     req_dicts = chunker(req_dict, len(result.cols_list), result.sel_list)
-    # print(req_dicts)
+    print(req_dict)
+    print(req_dicts)
     query = find_evth(req_dicts, corp_id)
     # print(query)
     with engine.connect() as con:
