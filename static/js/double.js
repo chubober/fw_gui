@@ -16,6 +16,20 @@ $('body').on('click', '.addsection', function() {
     var section = template.clone().find(':input').each(function(){
         this.name = sectionsCount + '_' + this.name.substring(2);
     }).end();
+    section.find('div').each(function(){
+        div_name = $(this).attr("name")
+        if (typeof div_name !== "undefined" && div_name !== false) {
+            if (div_name.split('_')[0] == anothercount - 1) {
+                $(this).attr("name", anothercount + '_' + div_name.split('_').slice(1).join('_'))
+        }};
+    }).end();
+    section.find('button').each(function(){
+        div_id = $(this).attr("id")
+        if (typeof div_id !== "undefined" && div_id !== false) {
+            if (div_id.split('_')[0] == anothercount - 1) {
+                $(this).attr("id", anothercount + '_' + div_id.split('_').slice(1).join('_'))
+        }};
+    }).end();
     section.find('.bootstrap-select').replaceWith(function() { return $('select', this); });
     section.find('.selectpicker').selectpicker();
     

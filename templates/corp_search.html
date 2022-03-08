@@ -41,6 +41,7 @@
   </nav>
 
 
+
   <!-- Page Content -->
 {% for cat, msg in get_flashed_messages(True) %}
 <div class = 'flash {{cat}}'>{{msg}}</div>
@@ -49,19 +50,19 @@
 <h1 class="text-center">{{corp_name}}</h1>
 <form action="{{url_for('corp_result', corp_id=corp_id)}}" target="_blank" method="GET" autocomplete="off" class="container-fluid mt-xl-4">
   <div id="sections" class="row flex-row flex-nowrap scroll">
-    <div class="col col-md-4 col-12 section card pt-xl-3" id="section_card_1">
+    <div class="col col-md-4 col-12 section card pt-xl-3" id="section_card_1" style="position: relative;">
       {% for text_input in text_list %}
       <div id = "duplicater{{text_input}}" class = 'form-group'>
         <label>{{text_input}}</label>
         <div id="duplicater_{{text_input}}" style="display:flex;" class = 'form-group' name = "duplic">
-          <input style="float: left;" class="form-control" name="1_{{text_input}}" list="{{text_input}}" id="{{text_input}}">
-          <div style="float:right;width: auto;" id="button_log">
-            <select id = '1' style="float: right;" required class="selectpicker" data-actions-box="true" tabindex="-98" name="1_{{text_input}}"  data-selected-text-format="count" data-width="fit" data-container="body">
+          <input style="float: left;width: 75%;" class="form-control" name="1_{{text_input}}_1" list="{{text_input}}" id="{{text_input}}">
+          <div style="float:right;width: auto;margin-left: 2%;" id="button_log" name="1_{{text_input}}_button_log">
+            <select id = '1' style="float: right;" required class="selectpicker" data-actions-box="true" tabindex="-98" name="1_{{text_input}}_1"  data-selected-text-format="count" data-width="fit" data-container="body">
               <option selected value="and">AND</option>
               <option selected value="or">OR</option>
             </select>
           </div>
-          <button style="float:right;" id = '{{text_input}}_button' type="button" class = 'button' name = 'pl' onclick = 'addDiv(this)'>+</button>
+          <button style="float:right;margin-left: 2%;" id = '1_{{text_input}}_button' type="button" class = 'button' name = 'pl' onclick = 'addDiv(this)'>+</button>
         <div>
 
       </div>
@@ -121,41 +122,55 @@
     var curFieldNameId = 1;
 
     function addDiv(elem){
+        const text = elem.id.split('_').slice(1, -1).join('_');
+        console.log(text)
+        const card_id = elem.parentElement.parentElement.parentElement.id
+        const card_number = card_id.split('_').slice(-1)[0]
+        var butn = document.getElementsByName(card_number + '_' + text + '_button_log')
+        butn = butn[butn.length - 1]
         template_log = template_first_log.clone().find('#button_log:first')
-        card_id = elem.parentElement.parentElement.parentElement.id
-        text = elem.id.split('_')[0];
+        console.log(elem.id)
         countOfFields++;
         curFieldNameId++;
         // Создаем элемент ДИВ
         var div = document.createElement("div");
         div.style.display = "flex";
+        div.classList.add('form-group')
         var input = document.createElement('input');
-        input.name = curFieldNameId+'_'+text;
+        input.name = card_number + '_' + text + '_' + curFieldNameId;
         input.classList.add('form-control');
         input.style.float = "left";
+        input.style.width = "75%"
         
         var new_select = template_log.find(':input').each(function(){}).end();
-        console.log(new_select)
         new_select.find('.bootstrap-select').replaceWith(function() { return $('select', this); });
         new_select.find('.selectpicker').selectpicker();
         new_select.name = curFieldNameId+'_'+text;
+        // new_select.style.marginLeft = "2%"
         new_select.innerHTML = '<option selected value="and">AND</option><option selected value="or">OR</option>';
-        
+        console.log(text)
+        document.getElementById(card_number + '_' + text + '_button').remove()
+
         var btn = document.createElement('button');
-        btn.id = text + "_button";
+        btn.id = card_number + '_' + text + "_button";
         btn.type = "button"
         btn.classList.add("button")
         btn.name = "pl"
         btn.style.float = "right"
+        btn.style.marginLeft = "2%"
         btn.addEventListener('click', function(){
             addDiv(this);
         });
+        btn.style.position = "relative"
+        btn.style.top = "1.6em"
         btn.innerHTML = "+";
         div.appendChild(input)
         var place = document.createElement('div')
+        place.style.marginLeft = "2%"
         place.id = curFieldNameId + "_here"
         div.appendChild(place)
         div.appendChild(btn)
+        console.log(text)
         var card = document.getElementById(card_id).querySelector("#duplicater"+text)
         // console.log(text)
         card.appendChild(div)
