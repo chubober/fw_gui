@@ -1,4 +1,3 @@
-
 from os import error
 import gspread
 import httplib2
@@ -69,7 +68,16 @@ def insert_new_line():
   return res[0][0]
 
 def insert_values_metadata(id, name, sel_cols, text_cols, perm_id):
-  query = f"update languages set name = '{name}', sel_cols = '{sel_cols}', text_cols = '{text_cols}', perm_id = '{perm_id}' where id = {id} "
+  #print(sel_cols)
+  new_sel = sel_cols.split(',')
+  new_text = text_cols.split(',')
+  #print(new_sel, new_text)
+  new_sel = [f"_{elem}" if elem.isnumeric() else elem for elem in new_sel]
+  new_text = [f"_{elem2}" if elem2.isnumeric() else elem2 for elem2 in new_text]
+  sel2 = ','.join(new_sel)
+  text2 = ','.join(new_text)
+  #print(sel2)
+  query = f"update languages set name = '{name}', sel_cols = '{sel2}', text_cols = '{text2}', perm_id = '{perm_id}' where id = {id} "
   cursor.execute(query)
   connection.commit()
 
@@ -203,6 +211,10 @@ def main(filename):
 
   #return
   return(f'corp_{id}')
+
+
+
+
 
 
 
