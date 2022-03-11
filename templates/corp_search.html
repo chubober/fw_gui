@@ -41,6 +41,7 @@
   </nav>
 
 
+
   <!-- Page Content -->
 {% for cat, msg in get_flashed_messages(True) %}
 <div class = 'flash {{cat}}'>{{msg}}</div>
@@ -49,21 +50,22 @@
 <h1 class="text-center">{{corp_name}}</h1>
 <form action="{{url_for('corp_result', corp_id=corp_id)}}" target="_blank" method="GET" autocomplete="off" class="container-fluid mt-xl-4">
   <div id="sections" class="row flex-row flex-nowrap scroll">
-    <div class="col col-md-4 col-12 section card pt-xl-3">
+    <div class="col col-md-4 col-12 section card pt-xl-3" id="section_card_1" style="position: relative;">
       {% for text_input in text_list %}
       <div id = "duplicater{{text_input}}" class = 'form-group'>
         <label>{{text_input}}</label>
-        
-        <div id="duplicater_{{text_input}}" class = 'form-group' name = "duplic">
-
-        <input class="form-control" name="1_{{text_input}}" list="{{text_input}}" id="{{text_input}}">
-        <select id = '1' required class="selectpicker" data-actions-box="true" tabindex="-98" name="1_{{text_input}}"  data-selected-text-format="count" data-width="fit" data-container="body">
-          <option selected value="and">AND</option>
-          <option selected value="or">OR</option>
-        </select>
+        <div id="duplicater_{{text_input}}" style="display:flex;" class = 'form-group' name = "duplic">
+          <input style="float: left;width: 75%;" class="form-control" name="1_{{text_input}}_1" list="{{text_input}}" id="{{text_input}}">
+          <div style="float:right;width: auto;margin-left: 2%;" id="button_log" name="1_{{text_input}}_button_log">
+            <select id = '1' style="float: right;" required class="selectpicker" data-actions-box="true" tabindex="-98" name="1_{{text_input}}_1"  data-selected-text-format="count" data-width="fit" data-container="body">
+              <option selected value="and">AND</option>
+              <option selected value="or">OR</option>
+            </select>
+          </div>
+          <button style="float:right;margin-left: 2%;" id = '1_{{text_input}}_button' type="button" class = 'button' name = 'pl' onclick = 'addDiv(this)'>+</button>
         <div>
-        <button id = '{{text_input}}_button' type="button" class = 'button' name = 'pl' onclick = 'addDiv(this)'>+</button>
-        </div>
+
+      </div>
         <!--
         <button id = '{{text_input}}_button_and' type="button" onclick = 'duplicate(this); click_and(document.getElementsByName("1_{{text_input}}"))' class = 'button-and' name = 'and'>AND</button>
         <input name = 'and' id = "{{text_input}}_and" type = "hidden" value = 'and'>
@@ -110,77 +112,106 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
-  <script  src="/static/js/double.js" crossorigin></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="/static/js/mini-double.js"></script>
+  <script src="/static/js/double.js" crossorigin></script>
   <script>
-  var i = 0;
-  var countOfFields = 1; 
-  var curFieldNameId = 1;
+    var template_first_log = $('#section_card_1').clone();
+    console.log(template_first_log.find('#button_log:first'))
+    var i = 0;
+    var countOfFields = 1; 
+    var curFieldNameId = 1;
 
-  function addDiv(elem){
-    text = elem.id.split('_')[0]
-    console.log(text);
-    countOfFields++;
-    curFieldNameId++;
-    // Создаем элемент ДИВ
-    var div = document.createElement("div");
-    var input = document.createElement('input');
-    input.name = curFieldNameId+'_'+text;
-    input.class = 'form-control';
-    var select = document.createElement('select');
-    select.required = true;
-    select.width = '100px'
-    //select.find('.bootstrap-select').replaceWith(function() { return $('select', this); });
-    //select.find('.selectpicker').selectpicker();
-    //select.classList.add('selectpicker')
-    select.name = curFieldNameId+'_'+text
-    select.innerHTML = '<option selected value="and">AND</option><option selected value="or">OR</option>'
-    var btn = document.createElement('button')
-    btn.innerHTML = '<button id = "'+text+'_button" type="button" class = "button" name = "pl" onclick = "addDiv(this)">+</button>'
-    //btn.name = "plus";
-    //btn.id = curFieldNameId
-    //btn.type = 'button'
-    //btn.addEventListener('click', addDiv(this, text))
-    //btn.innerHTML='+'
+    function addDiv(elem){
+        const text = elem.id.split('_').slice(1, -1).join('_');
+        console.log(text)
+        const card_id = elem.parentElement.parentElement.parentElement.id
+        const card_number = card_id.split('_').slice(-1)[0]
+        var butn = document.getElementsByName(card_number + '_' + text + '_button_log')
+        butn = butn[butn.length - 1]
+        template_log = template_first_log.clone().find('#button_log:first')
+        console.log(elem.id)
+        countOfFields++;
+        curFieldNameId++;
+        // Создаем элемент ДИВ
+        var div = document.createElement("div");
+        div.style.display = "flex";
+        div.classList.add('form-group')
+        var input = document.createElement('input');
+        input.name = card_number + '_' + text + '_' + curFieldNameId;
+        input.classList.add('form-control');
+        input.style.float = "left";
+        input.style.width = "75%"
+        
+        var new_select = template_log.find(':input').each(function(){}).end();
+        new_select.find('.bootstrap-select').replaceWith(function() { return $('select', this); });
+        new_select.find('.selectpicker').selectpicker();
+        new_select.name = curFieldNameId+'_'+text;
+        // new_select.style.marginLeft = "2%"
+        new_select.innerHTML = '<option selected value="and">AND</option><option selected value="or">OR</option>';
+        console.log(text)
+        document.getElementById(card_number + '_' + text + '_button').remove()
 
-    div.appendChild(input)
-    div.appendChild(select)
-    div.appendChild(btn)
-    console.log(div)
-    document.getElementById("duplicater"+text).appendChild(div);
-    // Возвращаем false, чтобы не было перехода по сслыке
-    return false;
-  }
+        var btn = document.createElement('button');
+        btn.id = card_number + '_' + text + "_button";
+        btn.type = "button"
+        btn.classList.add("button")
+        btn.name = "pl"
+        btn.style.float = "right"
+        btn.style.marginLeft = "2%"
+        btn.addEventListener('click', function(){
+            addDiv(this);
+        });
+        btn.style.position = "relative"
+        btn.style.top = "1.6em"
+        btn.innerHTML = "+";
+        div.appendChild(input)
+        var place = document.createElement('div')
+        place.style.marginLeft = "2%"
+        place.id = curFieldNameId + "_here"
+        div.appendChild(place)
+        div.appendChild(btn)
+        console.log(text)
+        var card = document.getElementById(card_id).querySelector("#duplicater"+text)
+        // console.log(text)
+        card.appendChild(div)
+        new_select.appendTo('#' + curFieldNameId + '_here')
+        
+        // Возвращаем false, чтобы не было перехода по сслыке
+        return false;
+    }
 
-  function duplicate(elem) {
-    var par_el = elem.parentElement.id;
-    var original = document.getElementById(par_el);
-    var clone = original.cloneNode(true); // "deep" clone
-    clone.style.background = 'white';
-    clone.id = "duplicator" + ++i; // there can only be one element with an ID
-    original.parentNode.appendChild(clone);
-    console.log(clone)
-    var text_value = clone.childNodes.item(1).value
-    var tup = [text_value]
-    console.log(tup)
-  }
+    function duplicate(elem) {
+        var par_el = elem.parentElement.id;
+        var original = document.getElementById(par_el);
+        var clone = original.cloneNode(true); // "deep" clone
+        clone.style.background = 'white';
+        clone.id = "duplicator" + ++i; // there can only be one element with an ID
+        original.parentNode.appendChild(clone);
+        console.log(clone)
+        var text_value = clone.childNodes.item(1).value
+        var tup = [text_value]
+        console.log(tup)
+    }
 
 
-  function click_and(elem) {
-  console.log(elem[0])
-  elem[0].style.background = '#BCF99E';
-  }
+    function click_and(elem) {
+    console.log(elem[0])
+    elem[0].style.background = '#BCF99E';
+    }
 
-  function click_or(elem) {
-     elem[0].style.background = '#F9F79E';
-  }
-    
-  function click_not(elem) {
-  console.log(elem[0])
-  elem[0].style.background = '#959595';
-  }
+    function click_or(elem) {
+        elem[0].style.background = '#F9F79E';
+    }
+        
+    function click_not(elem) {
+    console.log(elem[0])
+    elem[0].style.background = '#959595';
+    }
 
   </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  
+  
 
 </body>
 
