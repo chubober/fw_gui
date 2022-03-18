@@ -62,7 +62,7 @@
               <option selected value="or">OR</option>
             </select>
           </div>
-          <button style="float:right;margin-left: 2%;" id = '1_{{text_input}}_button' type="button" class = 'button' name = 'pl' onclick = 'addDiv(this)'>+</button>
+          <button style="float:right;margin-left: 2%;" id = '1_{{text_input}}_button_1' type="button" class = 'button' name = 'pl' onclick = 'addDiv(this)'>+</button>
         <div>
 
       </div>
@@ -118,11 +118,10 @@
     var template_first_log = $('#section_card_1').clone();
     console.log(template_first_log.find('#button_log:first'))
     var i = 0;
-    var countOfFields = 1; 
     var curFieldNameId = 1;
 
     function addDiv(elem){
-        const text = elem.id.split('_').slice(1, -1).join('_');
+        const text = elem.id.split('_').slice(1, -2).join('_');
         console.log(text)
         const card_id = elem.parentElement.parentElement.parentElement.id
         const card_number = card_id.split('_').slice(-1)[0]
@@ -130,7 +129,6 @@
         butn = butn[butn.length - 1]
         template_log = template_first_log.clone().find('#button_log:first')
         console.log(elem.id)
-        countOfFields++;
         curFieldNameId++;
         // Создаем элемент ДИВ
         var div = document.createElement("div");
@@ -145,14 +143,14 @@
         var new_select = template_log.find(':input').each(function(){}).end();
         new_select.find('.bootstrap-select').replaceWith(function() { return $('select', this); });
         new_select.find('.selectpicker').selectpicker();
-        new_select.name = curFieldNameId+'_'+text;
+        new_select.attr("name", card_number + '_' + text + '_button_log_' + curFieldNameId)
+        // new_select.name = text+'_'+curFieldNameId;
         // new_select.style.marginLeft = "2%"
         new_select.innerHTML = '<option selected value="and">AND</option><option selected value="or">OR</option>';
-        console.log(text)
-        document.getElementById(card_number + '_' + text + '_button').remove()
+        elem.remove()
 
         var btn = document.createElement('button');
-        btn.id = card_number + '_' + text + "_button";
+        btn.id = card_number + '_' + text + "_button_" + curFieldNameId;
         btn.type = "button"
         btn.classList.add("button")
         btn.name = "pl"
