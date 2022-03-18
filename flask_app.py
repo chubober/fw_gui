@@ -274,7 +274,8 @@ def corp_result(corp_id):
 
     result.res_dicts = dicter(results, result.cols_list)
     
-    return render_template('result.html', results=result.res_dicts, cols = result.cols_list, corp_id=corp_id, query=query)
+    return render_template('result.html', results=result.res_dicts, cols = result.cols_list, 
+                            corp_id=corp_id, query=query, text_cols=result.text_list, enumerate=enumerate)
 
 
 @app.route('/moksha/result', methods=['get'])

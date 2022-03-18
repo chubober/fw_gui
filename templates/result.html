@@ -63,14 +63,80 @@
     </div>
   </div>
   <br>
-  {% for result in results %}
+  {% for i, result in enumerate(results) %}
   <div class="container card bg-light w-75 mb-3">
     <div class="card-body">
+    <div id="table-container-{{ i }}"></div>
+
+    <script>
+      function generateTableFromString(SepString) {
+        const table = document.createElement('table');
+        SepString.split('/').forEach((line) => {
+          const tr = table.appendChild(document.createElement('tr'));
+          const splitLine = line.trim().split('|')
+          const lineLen = splitLine.length
+          if (lineLen > 2) {
+              var maxLen = lineLen;
+          }
+          if (lineLen > 2) {
+              splitLine.forEach((cell, index) => {
+                  let cellTag;
+                  if (index === 0) {
+                      cellTag = 'th';
+                  } else {
+                      cellTag = 'td';
+                  }
+                  const cellElement = tr.appendChild(document.createElement(cellTag));
+                  cellElement.appendChild(document.createTextNode(cell.trim()));
+              });
+          } else {
+              splitLine.forEach((cell, index) => {
+                  let cellTag;
+                  if (index === 0) {
+                      cellTag = 'th';
+                      const cellElement = tr.appendChild(document.createElement(cellTag));
+                      cellElement.appendChild(document.createTextNode(cell.trim()));
+                  } else {
+                      cellTag = 'td';
+                      colSpan = maxLen - 1
+                      colSpan = colSpan.toString()
+                      const cellElement = tr.appendChild(document.createElement(cellTag));
+                      cellElement.appendChild(document.createTextNode(cell.trim()));
+                      cellElement.setAttribute('colspan', colSpan)
+                  }
+              });
+          }
+        });
+        return table;
+      }
+  
+      // convert an HTML fragment to plain text
+      var tempDiv = document.createElement('div');
+      tempDiv.innerHTML = `
+      {% for key in result %}
+      {% if result[key] and result[key] != [''] %}
+      {% if key in text_cols %}
+      {{ key }}|{{ result[key] }}/
+      {% endif %}
+      {% endif %}
+      {% endfor %}
+      `;
+      document.documentElement.appendChild(tempDiv);
+      var SepString = tempDiv.innerText;
+      document.documentElement.removeChild(tempDiv);
+  
+      var table = generateTableFromString(SepString);
+      document.querySelector('#table-container-{{ i }}').appendChild(table);
+    </script>
+
+    </br> 
     {% for key in result %}
     {% if result[key] and result[key] != [''] %}
+    {% if key not in text_cols %}
       <p class="card-text">
         <b>{{ key }}:</b> {{ result[key] }}
       </p>
+    {% endif %}
     {% endif %}
     {% endfor %}
     </div>
