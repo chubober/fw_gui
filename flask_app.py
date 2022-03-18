@@ -29,7 +29,7 @@ import threading
 
 app = Flask(__name__)
 
-engine = create_engine('postgresql+psycopg2://lingvist:lingvistpassword@178.154.193.115:5432/mydatabase')
+engine = create_engine('postgresql+psycopg2://lingvist:lingvistpassword@127.0.0.1:5432/mydatabase')
 
 Base = declarative_base()
 

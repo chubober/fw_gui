@@ -19,10 +19,10 @@ from sqlalchemy.sql.expression import any_
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import session, sessionmaker
 
-engine = create_engine('postgresql+psycopg2://lingvist:lingvistpassword@178.154.193.115:5432/mydatabase')
+engine = create_engine('postgresql+psycopg2://lingvist:lingvistpassword@127.0.0.1:5432/mydatabase')
 connection = psycopg2.connect(user="lingvist",
                                     password="lingvistpassword",
-                                    host="178.154.193.115",
+                                    host="127.0.0.1",
                                     port="5432",
                                     database="mydatabase")
 cursor = connection.cursor()
@@ -187,10 +187,10 @@ def add_primary(id):
 
 
 def main(filename):
-  #engine = create_engine('postgresql+psycopg2://lingvist:lingvistpassword@178.154.193.115:5432/mydatabase')
+  #engine = create_engine('postgresql+psycopg2://lingvist:lingvistpassword@127.0.0.1:5432/mydatabase')
   #connection = psycopg2.connect(user="lingvist",
   #                                  password="lingvistpassword",
-  #                                  host="178.154.193.115",
+  #                                  host="127.0.0.1",
   #                                  port="5432",
   #                                  database="mydatabase")
   #cursor = connection.cursor()
