@@ -141,7 +141,7 @@
         input.style.width = "75%"
         
         var new_select = template_log.find(':input').each(function(){
-          this.name = this.name.split('_').slice(0, -1).join('_') + '_' + curFieldNameId;
+          this.name = card_number + '_' + this.name.split('_').slice(1, -1).join('_') + '_' + curFieldNameId;
         }).end();
         new_select.find('.bootstrap-select').replaceWith(function() { return $('select', this); });
         new_select.find('.selectpicker').selectpicker();
