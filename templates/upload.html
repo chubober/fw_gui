@@ -51,28 +51,83 @@
   <div class = 'flash {{cat}}'>{{msg}}   <b><a target="_blank" href = https://docs.google.com/spreadsheets/d/1JR-5aGamR2Y4EHC3atQj_STkxvyuQTVsaPaFc9NUaQo/edit?usp=sharing style="color: #330000">Template</a></b></div>
   {% endfor %}
 
-  <form action = "{{url_for('res_corp')}}"  method="post" autocomplete="off" class="container-fluid" enctype="multipart/form-data" >
-  <!--
-    <select name = "lang_select" id = "langs">
-    {% for lang in langs %}
-    <option value = "{{lang}}">{{lang}}</option>
-    {% endfor %}
-    <option value = "lang">Test_lang</option>
-    <option value = "other" name = "other"> Other </option>
-  </select>
+  <div class="container-fluid my-3" style="width: 75%;">
+    <form action = "{{url_for('res_corp')}}"  method="post" autocomplete="off" class="container-fluid" enctype="multipart/form-data" >
+    <!--
+      <select name = "lang_select" id = "langs">
+      {% for lang in langs %}
+      <option value = "{{lang}}">{{lang}}</option>
+      {% endfor %}
+      <option value = "lang">Test_lang</option>
+      <option value = "other" name = "other"> Other </option>
+    </select>
+    <br>
+    <br>
+    <label for="text">Your language:<br></label>
+      <input type="text" id = "lang" name = "lang_name">
+    <br>
+  -->
   <br>
+    <label for="file">To create a new corpus, upload your data in .xls(x) format.
+      It should be a table exported from FieldWorks. Example of such a table is presented below,
+      and the full template is <a href="#">available for downloading</a>.
+    </label>
   <br>
-  <label for="text">Your language:<br></label>
-    <input type="text" id = "lang" name = "lang_name">
-  <br>
--->
-<br>
-  <label for="file">Upload a corpus file in .xls or .xlsx<br></label>
-  <input type="file" class = "form-control-file" id="myFile" name="filename" accept = ".xls, .xlsx" >
-  <br>
-  <input class="submit" type="submit" name="submit" value="New corpus">
+  <style type="text/css">
+    .tg {border-collapse:collapse;border-spacing:0;}
+    .tg td{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
+    overflow:hidden;padding:10px 5px;word-break:normal;}
+    .tg th{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
+    font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}
+    .tg .tg-0pky{border-color:inherit;text-align:left;vertical-align:top}
+    </style>
+    <table class="tg">
+    <thead>
+    <tr>
+    <th class="tg-0pky">№№</th>
+    <th class="tg-0pky">segm</th>
+    <th class="tg-0pky">pred№</th>
+    <th class="tg-0pky">kh_pred</th>
+    <th class="tg-0pky">kh_full</th>
+    <th class="tg-0pky">pred_gl</th>
+    <th class="tg-0pky">gls_full</th>
+    <th class="tg-0pky">tr_pred</th>
+    <th class="tg-0pky">per_full</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+    <td class="tg-0pky">1</td>
+    <td class="tg-0pky">1</td>
+    <td class="tg-0pky">1</td>
+    <td class="tg-0pky">jetən|xătəł|pԑlək|pox|</td>
+    <td class="tg-0pky">jetən|xătəł|pԑlək|pox|pa|ałəŋ|xătəł|pԑlək|ewi|</td>
+    <td class="tg-0pky">вечер|солнце|сторона|мальчик</td>
+    <td class="tg-0pky">вечер|солнце|сторона|мальчик|и|утро|солнце|сторона|девочка|</td>
+    <td class="tg-0pky">Мальчик с той стороны, где солнце всходит,</td>
+    <td class="tg-0pky" colspan="3">Мальчик с той стороны, где солнце&nbsp;&nbsp;&nbsp;всходит, и девочка с той стороны, где солнце садится</td>
+    </tr>
+    <tr>
+    <td class="tg-0pky">1</td>
+    <td class="tg-0pky">1</td>
+    <td class="tg-0pky">2</td>
+    <td class="tg-0pky">pa|ałəŋ|xătəł|pԑlək|ewi|</td>
+    <td class="tg-0pky">jetən|xătəł|pԑlək|pox|pa|ałəŋ|xătəł|pԑlək|ewi|</td>
+    <td class="tg-0pky">и|утро|солнце|сторона|девочка|</td>
+    <td class="tg-0pky">вечер|солнце|сторона|мальчик|и|утро|солнце|сторона|девочка|</td>
+    <td class="tg-0pky">На той стороне, где солнце садится (букв.: на вечерней стороне солнца), бедные муж с женой,
+    <td class="tg-0pky" colspan="3">На той стороне, где солнце садится (букв.: на вечерней стороне солнца), бедные муж с женой, и на той стороне, где солнце всходит (букв.: на утренней стороне солнца) бедные муж с женой живут</td>
+    </td>
+    </tr>
+    </tbody>
+    </table>
+    <br>
+    <input type="file" class = "form-control-file" id="myFile" name="filename" accept = ".xls, .xlsx" >
+    <br>
+    <input class="submit" type="submit" name="submit" value="New corpus">
 
-</form>
+  </form>
+</div>
 </body>
 <!--Button Disable Script-->
 <script type="text/javascript">
