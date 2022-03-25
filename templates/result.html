@@ -71,13 +71,17 @@
     <script>
       function generateTableFromString(SepString) {
         const table = document.createElement('table');
-        SepString.split('/').forEach((line) => {
+        const splitString = SepString.split('$')
+        let maxLen = 2
+        splitString.forEach((line) => {
+          const splitLine = line.trim().split('|')
+          const lineLen = splitLine.length
+          if (lineLen > 2) {maxLen = lineLen}
+        });
+        splitString.forEach((line) => {
           const tr = table.appendChild(document.createElement('tr'));
           const splitLine = line.trim().split('|')
           const lineLen = splitLine.length
-          if (lineLen > 2) {
-              var maxLen = lineLen;
-          }
           if (lineLen > 2) {
               splitLine.forEach((cell, index) => {
                   let cellTag;
@@ -98,7 +102,7 @@
                       cellElement.appendChild(document.createTextNode(cell.trim()));
                   } else {
                       cellTag = 'td';
-                      colSpan = maxLen - 1
+                      let colSpan = maxLen - 1
                       colSpan = colSpan.toString()
                       const cellElement = tr.appendChild(document.createElement(cellTag));
                       cellElement.appendChild(document.createTextNode(cell.trim()));
@@ -116,7 +120,7 @@
       {% for key in result %}
       {% if result[key] and result[key] != [''] %}
       {% if key in text_cols %}
-      {{ key }}|{{ result[key] }}/
+      {{ key }}:|{{ result[key] }}$
       {% endif %}
       {% endif %}
       {% endfor %}
