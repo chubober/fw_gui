@@ -36,6 +36,29 @@
 
   <!-- Page Content -->
 
+  <div class="card">
+    <div class="card-header" id="headingTwo">
+      <h5 class="mb-0">
+        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+          Search query
+        </button>
+      </h5>
+    </div>
+    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo">
+      <div class="card-body">
+        <pre><code>
+          {{ query }}
+        </code></pre>
+      </div>
+    </div>
+  </div>
+  <script src="https://unpkg.com/sql-formatter@2.3.3/dist/sql-formatter.min.js"></script>
+  <script>
+    var query = document.querySelector('code');
+    var format = window.sqlFormatter.format;
+    query.innerText = format(query.innerText)
+  </script>
+
   {% if not results %}
     <div class="container">
         <h2> No result :( Please try again </h2>
