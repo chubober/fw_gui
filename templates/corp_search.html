@@ -56,7 +56,7 @@
         <label>{{text_input}}</label>
         <div id="duplicater_{{text_input}}" style="display:flex;" class = 'form-group' name = "duplic">
           <input style="float: left;width: 75%;" class="form-control" name="1_{{text_input}}_1" list="{{text_input}}" id="{{text_input}}">
-          <div style="float:right;width: auto;margin-left: 2%;" id="button_log" name="1_{{text_input}}_button_log">
+          <div style="float:right;width: auto;margin-left: 2%;" id="button_log" name="1_{{text_input}}_button_log_1">
             <select id = '1' style="float: right;" required class="selectpicker" data-actions-box="true" tabindex="-98" name="1_{{text_input}}_1"  data-selected-text-format="count" data-width="fit" data-container="body">
               <option selected value="and">AND</option>
               <option selected value="or">OR</option>
@@ -125,8 +125,8 @@
         console.log(text)
         const card_id = elem.parentElement.parentElement.parentElement.id
         const card_number = card_id.split('_').slice(-1)[0]
-        var butn = document.getElementsByName(card_number + '_' + text + '_button_log')
-        butn = butn[butn.length - 1]
+        // var butn = document.getElementsByName(card_number + '_' + text + '_button_log_')
+        // butn = butn[butn.length - 1]
         template_log = template_first_log.clone().find('#button_log:first')
         console.log(elem.id)
         curFieldNameId++;
@@ -140,7 +140,9 @@
         input.style.float = "left";
         input.style.width = "75%"
         
-        var new_select = template_log.find(':input').each(function(){}).end();
+        var new_select = template_log.find(':input').each(function(){
+          this.name = card_number + '_' + this.name.split('_').slice(1, -1).join('_') + '_' + curFieldNameId;
+        }).end();
         new_select.find('.bootstrap-select').replaceWith(function() { return $('select', this); });
         new_select.find('.selectpicker').selectpicker();
         new_select.attr("name", card_number + '_' + text + '_button_log_' + curFieldNameId)
