@@ -36,6 +36,29 @@
 
   <!-- Page Content -->
 
+  <div class="card">
+    <div class="card-header" id="headingTwo">
+      <h5 class="mb-0">
+        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+          Search query
+        </button>
+      </h5>
+    </div>
+    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo">
+      <div class="card-body">
+        <pre><code>
+          {{ query }}
+        </code></pre>
+      </div>
+    </div>
+  </div>
+  <script src="https://unpkg.com/sql-formatter@2.3.3/dist/sql-formatter.min.js"></script>
+  <script>
+    var query = document.querySelector('code');
+    var format = window.sqlFormatter.format;
+    query.innerText = format(query.innerText)
+  </script>
+
   {% if not results %}
     <div class="container">
         <h2> No result :( Please try again </h2>
@@ -71,13 +94,17 @@
     <script>
       function generateTableFromString(SepString) {
         const table = document.createElement('table');
-        SepString.split('/').forEach((line) => {
+        const splitString = SepString.split('$')
+        let maxLen = 2
+        splitString.forEach((line) => {
+          const splitLine = line.trim().split('|')
+          const lineLen = splitLine.length
+          if (lineLen > 2) {maxLen = lineLen}
+        });
+        splitString.forEach((line) => {
           const tr = table.appendChild(document.createElement('tr'));
           const splitLine = line.trim().split('|')
           const lineLen = splitLine.length
-          if (lineLen > 2) {
-              var maxLen = lineLen;
-          }
           if (lineLen > 2) {
               splitLine.forEach((cell, index) => {
                   let cellTag;
@@ -98,7 +125,7 @@
                       cellElement.appendChild(document.createTextNode(cell.trim()));
                   } else {
                       cellTag = 'td';
-                      colSpan = maxLen - 1
+                      let colSpan = maxLen - 1
                       colSpan = colSpan.toString()
                       const cellElement = tr.appendChild(document.createElement(cellTag));
                       cellElement.appendChild(document.createTextNode(cell.trim()));
@@ -116,7 +143,7 @@
       {% for key in result %}
       {% if result[key] and result[key] != [''] %}
       {% if key in text_cols %}
-      {{ key }}|{{ result[key] }}/
+      {{ key }}:|{{ result[key] }}$
       {% endif %}
       {% endif %}
       {% endfor %}

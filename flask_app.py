@@ -95,8 +95,46 @@ def chunker(req_dict, n, sel_list):
 #                                   ).all()
 
 #         res_set.update(list(records))
-#     return list(res_set)
+def chunker2(req_dict, text_list):
+    #req_dicts = [dict() for i in range(0, len(req_dict), n)]
+    req_dicts = []
+    dict_num = 0
+    count = 0
+    new_li = {}
+    for key, value in req_dict.items():
+        new_k = key.split('_')
+        tup = (new_k[0], new_k[-1])
+        int_tup = int(tup[0])
+        if int_tup > len(req_dicts):
+            req_dicts.append(dict())
+        new_li = req_dicts[int_tup - 1]
+        found = False
+        for elem in text_list:
+            if elem in key:
+                found = True
+                if elem not in new_li:
+                    new_li[elem] = []
+                for el in value:
+                    new_li[elem].append(el)
+        if not found:
+            elem = tup[-1]
+            if elem not in new_li:
+                new_li[elem] = []
+            for el in value:
+                new_li[elem].append(el)
+    return req_dicts
 
+def clean_dict(dictt, text_cols):
+    v_n = []
+    for k,v in dictt.items():
+        if k in text_cols:
+            v.pop(-1) 
+            v_n.append((k, ' '.join(v)))
+    for el in v_n:
+        dictt[el[0]]= el[1]       
+    return
+
+    
 
 def dicter(records, cols_list):
     dicts = []
@@ -264,7 +302,11 @@ def corp_result(corp_id):
     result.cols_list = result.text_list + result.sel_list
 
     req_dict = request.args.to_dict(flat=False)
-    req_dicts = chunker(req_dict, len(result.cols_list), result.sel_list)
+    #req_dict = {'1_kh_full_1': ['он', 'or'], '1_kh_full_2': ['я', 'and'], '1_per_full_1': ['он', 'and'], '1_per_full_2': ['она', 'or'], '1_per_full_3': ['они', 'or'], '1_so': ['', '0.0', '1.0'], '1_trans': ['', 'bitr', 'ntr', 'tr'], '1_pass': ['', '0.0', '1.0'], '1_wo': ['', 'N-Vtr', 'OV', 'S', 'SOV', 'SV', 'V', 'Vtr-LOC-Nposs'], '2_kh_full_1': ['kkkhk', 'and'], '2_kh_full_2': ['lkjmljlj', 'or'], '2_per_full_1': ['', 'or'], '2_so': ['', '0.0', '1.0'], '2_trans': ['', 'bitr', 'ntr', 'tr'], '2_pass': ['', '0.0', '1.0'], '2_wo': ['', 'N-Vtr', 'OV', 'S', 'SOV', 'SV', 'V', 'Vtr-LOC-Nposs']}
+
+    req_dicts = chunker2(req_dict, result.text_list)
+    for elem in req_dicts:
+        clean_dict(elem, result.text_list)
     print(req_dict)
     print(req_dicts)
     query = find_evth(req_dicts, corp_id)

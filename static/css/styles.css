@@ -46,3 +46,7 @@
   font-size: 20px;
   vertical-align: middle;
 }
+
+td {
+  border-right: 1em solid transparent;
+}
