@@ -40,6 +40,9 @@
             <a class="nav-link" href="/corps">Corpora</a>
           </li>
           <li class="nav-item active">
+            <a class="nav-link" href="/instructions">How to search</a>
+          </li>
+          <li class="nav-item active">
             <a class="nav-link" href="/upload">Upload data</a>
           </li>
         </ul>
@@ -52,18 +55,20 @@
   <div class = 'flash {{cat}}'>{{msg}}   <b><a target="_blank" href = https://docs.google.com/spreadsheets/d/1JR-5aGamR2Y4EHC3atQj_STkxvyuQTVsaPaFc9NUaQo/edit?usp=sharing style="color: #330000">Template</a></b></div>
   {% endfor %}
   <br>
-  <div class="container-fluid my-3" style="width: 75%;">
-  <h3 class="ml-3">new corpus</h3>
-  <div class="my-3">
-    <p>
-    Now, enter your corpus name. Most probably, it should contain the language name and disambiguation information
-    such as year or field if needed (for example, Khanty Kazym or Khanty 2021).
-    </p>
-    <p>
-    To enable correct search, please select columns that should be accessible
-    for full-text search (such as text and glosses) and columns with multiple select available.
-    </p>
-  </div>
+    <div class="search" style="margin-top: 70px; margin-top: 50px;">
+      <h3 class="ml-3">New corpus</h3>
+      <div class="container-fluid" style="color: black;font-size: larger;margin-bottom: 2em;">
+        <p>
+          Now, enter your corpus name. Most probably, it should contain the language name and disambiguation information
+          such as year or field if needed (for example, Khanty Kazym or Khanty 2021).
+        </p>
+        <p>
+          To enable correct searching, please select columns that should be accessible
+          for full-text search (such as <b>text</b> and <b>glosses</b>) and columns with multiple select available.
+        </p>
+      </div>
+    
+  
   <form action = "{{url_for('end_of_new_upl')}}" method="post" autocomplete="off" class="container-fluid" enctype="multipart/form-data">
 
   <div class="form-group col-md-3">
@@ -108,6 +113,7 @@
   <p>You will be redirected to a blank spreadsheet, where you can set permissions.</p>
   <input class="submit" type="submit" name="submit" value="upload new corpus">
   </form>
+</div>
 </div>
   <!-- <script src="/static/js/jwt-decode.js"></script> -->
   

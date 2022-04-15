@@ -33,6 +33,9 @@
             <a class="nav-link" href="/corps">Corpora</a>
           </li>
           <li class="nav-item active">
+            <a class="nav-link" href="/instructions">How to search</a>
+          </li>
+          <li class="nav-item active">
             <a class="nav-link" href="/upload">Upload data</a>
           </li>
         </ul>
@@ -57,7 +60,7 @@
         <div id="duplicater_{{text_input}}" style="display:flex;" class = 'form-group' name = "duplic">
           <input style="float: left;width: 75%;" class="form-control" name="1_{{text_input}}_1" list="{{text_input}}" id="{{text_input}}">
           <div style="float:right;width: auto;margin-left: 2%;" id="button_log" name="1_{{text_input}}_button_log_1">
-            <select id = '1' style="float: right;" required class="selectpicker" data-actions-box="true" tabindex="-98" name="1_{{text_input}}_1"  data-selected-text-format="count" data-width="fit" data-container="body">
+            <select id = '1' style="float: right;" required class="selectpicker" data-actions-box="true" tabindex="-98" name="1_{{text_input}}_1"  data-selected-text-format="count" data-width="fit">
               <option selected value="and">AND</option>
               <option selected value="or">OR</option>
             </select>
@@ -66,14 +69,6 @@
         <div>
 
       </div>
-        <!--
-        <button id = '{{text_input}}_button_and' type="button" onclick = 'duplicate(this); click_and(document.getElementsByName("1_{{text_input}}"))' class = 'button-and' name = 'and'>AND</button>
-        <input name = 'and' id = "{{text_input}}_and" type = "hidden" value = 'and'>
-        <button id = '{{text_input}}_button_or' type="button" onclick = 'duplicate(this, "or"); click_or(document.getElementsByName("1_{{text_input}}"))' class = 'button-or' name = 'or'>OR</button>
-        <input name = 'or' id = "{{text_input}}_or" type = "hidden" value = ''>
-        <button id = '{{text_input}}_button_not' type="button" class = 'button-not' name = 'not' onclick = 'click_not(document.getElementsByName("1_{{text_input}}"))'>NOT</button>
-        <input name = 'not' id = "{{text_input}}_not" type = "hidden" value = ''>
-      -->
         <br>
       </div>
     </div>
@@ -162,7 +157,7 @@
             addDiv(this);
         });
         btn.style.position = "relative"
-        btn.style.top = "1.6em"
+        // btn.style.top = "1.6em"
         btn.innerHTML = "+";
         div.appendChild(input)
         var place = document.createElement('div')

@@ -213,6 +213,9 @@ def main_page():
 
     return render_template('index.html')
 
+@app.route('/instructions')
+def instr():
+    return render_template('instructions.html')
 
 @app.route('/corps')
 def corps():

@@ -39,6 +39,9 @@
             <a class="nav-link" href="/corps">Corpora</a>
           </li>
           <li class="nav-item active">
+            <a class="nav-link" href="/instructions">How to search</a>
+          </li>
+          <li class="nav-item active">
             <a class="nav-link" href="/upload">Upload data</a>
           </li>
         </ul>
@@ -51,7 +54,15 @@
   <div class = 'flash {{cat}}'>{{msg}}   <b><a target="_blank" href = https://docs.google.com/spreadsheets/d/1JR-5aGamR2Y4EHC3atQj_STkxvyuQTVsaPaFc9NUaQo/edit?usp=sharing style="color: #330000">Template</a></b></div>
   {% endfor %}
 
-  <div class="container-fluid my-3" style="width: 75%;">
+  <div class="search" style="margin-top: 70px; margin-top: 50px;">
+    <div class="container-fluid" style="color: black;font-size: larger;margin-bottom: 2em;">
+      <label for="file">To create a new corpus, upload your data in .xls(x) format.
+        It should be a table exported from FieldWorks. Example of such a table is presented below,
+        and the full template is <a href="#">available for downloading</a>.
+      </label>
+    </div>
+  
+
     <form action = "{{url_for('res_corp')}}"  method="post" autocomplete="off" class="container-fluid" enctype="multipart/form-data" >
     <!--
       <select name = "lang_select" id = "langs">
@@ -67,17 +78,12 @@
       <input type="text" id = "lang" name = "lang_name">
     <br>
   -->
-  <br>
-    <label for="file">To create a new corpus, upload your data in .xls(x) format.
-      It should be a table exported from FieldWorks. Example of such a table is presented below,
-      and the full template is <a href="#">available for downloading</a>.
-    </label>
-  <br>
+  
   <style type="text/css">
     .tg {border-collapse:collapse;border-spacing:0;}
-    .tg td{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
+    .tg td{border-color:black;border-style:solid;border-width:1px;font-size:14px;
     overflow:hidden;padding:10px 5px;word-break:normal;}
-    .tg th{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
+    .tg th{border-color:black;border-style:solid;border-width:1px;font-size:14px;
     font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}
     .tg .tg-0pky{border-color:inherit;text-align:left;vertical-align:top}
     </style>
