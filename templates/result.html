@@ -170,6 +170,16 @@
   </div>
   {% endfor %}
   {% endif %}
+  <script src="/static/js/mark.min.js"></script>
+  <script>
+      const regexp = /%%(.+?)%%/g;
+      const reqst = document.querySelector("code").textContent;
+      const reqArray = [...reqst.matchAll(regexp)];
+      var instance = new Mark(document.querySelectorAll("td"));
+      for (let str of reqArray) {
+        instance.mark(str);;
+      }
+  </script>
   <!-- Bootstrap core JavaScript -->
   <script src="/static/vendor/jquery/jquery.slim.min.js"></script>
   <script src="/static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>

@@ -311,3 +311,8 @@ input, select, label {
       margin-top: 0 !important;
   }
 }
+
+mark{
+  font-weight: bold;
+  color: orange;
+}
