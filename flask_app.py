@@ -514,6 +514,33 @@ def edit_gsheet():
 
     return redirect(sh.url)
 
+@app.route('/perm_blank', methods=['post'])
+def perm_blank():
+    if request.method == 'POST':
+        corp_id = request.form.get('corp_id')
+
+    id = int(corp_id.split('_')[1])
+    perm_query = f'SELECT perm_id FROM languages WHERE id = {id}'
+
+    with engine.connect() as con:
+        perm_res = con.execute(perm_query)
+
+    perm_id = list(perm_res)[0][0]
+    sh = gc.open_by_key(perm_id)
+
+    perm_list = gc.list_permissions(perm_id)
+
+    got_perms = False
+    for user in perm_list:
+        if 'emailAddress' in user:
+            if user['role'] != 'owner':
+                got_perms = True
+
+    if got_perms:
+        gc.remove_permission(perm_id, 'anyoneWithLink')
+
+    return redirect(sh.url)
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=80)
 

@@ -50,7 +50,15 @@
 <div class = 'flash {{cat}}'>{{msg}}</div>
 {% endfor %}
 <br>
-<h1 class="text-center">{{corp_name}}</h1>
+<div class="container-fluid">
+  <h1 class="d-inline text-center">{{corp_name}}</h1>
+  <div id="perm_blank" class="d-inline">
+    <form action = "{{url_for('perm_blank')}}" target="_blank" method="post">
+      <input readonly name="corp_id" class="d-none" value="{{ corp_id }}">
+      <input type="submit" class="btn btn-outline-success" value="Permissions blank">
+    </form>
+  </div>
+</div>
 <form action="{{url_for('corp_result', corp_id=corp_id)}}" target="_blank" method="GET" autocomplete="off" class="container-fluid mt-xl-4">
   <div id="sections" class="row flex-row flex-nowrap scroll">
     <div class="col col-md-4 col-12 section card pt-xl-3" id="section_card_1" style="position: relative;">

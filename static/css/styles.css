@@ -316,3 +316,8 @@ mark{
   font-weight: bold;
   color: orange;
 }
+
+#perm_blank {
+  position: absolute;
+  right: 0;
+}
