@@ -381,10 +381,14 @@ def end_of_new_upl():
 
         perm_id = sh.id
         spreadsheet = gc.open_by_key(perm_id)
-        worksheet = spreadsheet.add_worksheet('blank', rows=3, cols=3)
-        worksheet.update('A1', 'Please use the «Share» function to set permissions')
-        main_link = url_for('main_page', _external=True)
-        worksheet.update('B3', f'=HYPERLINK("{main_link}";"MAIN PAGE")', raw=False)
+        worksheet = spreadsheet.add_worksheet('blank', rows=6, cols=5)
+        worksheet.update('A1', 'Use the «Share» function to set permissions')
+        worksheet.update('A3', 'With permissions set, this blank should be made private, i.e. not accessible by link')
+        worksheet.update('A4', 'You can do it manually or click «MAKE PRIVATE» below (you only need to do it once)')
+        perms_update = url_for('perms_update', perm_id=spreadsheet.id, _external=True)
+        worksheet.update('B6', f'=HYPERLINK("{perms_update}";"MAKE PRIVATE")', raw=False)
+        to_corps = url_for('corps', _external=True)
+        worksheet.update('D6', f'=HYPERLINK("{to_corps}";"TO CORPORA")', raw=False)
         spreadsheet.del_worksheet(spreadsheet.sheet1)
 
         insert_values_metadata(id, corp_name, sel, text, perm_id)
@@ -528,16 +532,20 @@ def perm_blank():
     perm_id = list(perm_res)[0][0]
     sh = gc.open_by_key(perm_id)
 
+    return redirect(sh.url)
+
+@app.route('/perms_update/<perm_id>')
+def perms_update(perm_id):
     perm_list = gc.list_permissions(perm_id)
+    sh = gc.open_by_key(perm_id)
 
-    got_perms = False
-    for user in perm_list:
-        if 'emailAddress' in user:
-            if user['role'] != 'owner':
-                got_perms = True
+    ids = [user.get('id') for user in perm_list]
+    roles = [user.get('role') for user in perm_list]
+    roles.remove('owner')
 
-    if got_perms:
+    if roles and 'anyoneWithLink' in ids:
         gc.remove_permission(perm_id, 'anyoneWithLink')
+        return redirect(sh.url)
 
     return redirect(sh.url)
 
