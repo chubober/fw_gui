@@ -381,14 +381,14 @@ def end_of_new_upl():
 
         perm_id = sh.id
         spreadsheet = gc.open_by_key(perm_id)
-        worksheet = spreadsheet.add_worksheet('blank', rows=6, cols=5)
+        worksheet = spreadsheet.add_worksheet('blank', rows=3, cols=3)
         worksheet.update('A1', 'Use the «Share» function to set permissions')
-        worksheet.update('A3', 'With permissions set, this blank should be made private, i.e. not accessible by link')
-        worksheet.update('A4', 'You can do it manually or click «MAKE PRIVATE» below (you only need to do it once)')
-        perms_update = url_for('perms_update', perm_id=spreadsheet.id, _external=True)
-        worksheet.update('B6', f'=HYPERLINK("{perms_update}";"MAKE PRIVATE")', raw=False)
+        # worksheet.update('A3', 'With permissions set, this blank should be made private, i.e. not accessible by link')
+        # worksheet.update('A4', 'You can do it manually or click «MAKE PRIVATE» below (you only need to do it once)')
+        # perms_update = url_for('perms_update', perm_id=spreadsheet.id, _external=True)
+        # worksheet.update('B6', f'=HYPERLINK("{perms_update}";"MAKE PRIVATE")', raw=False)
         to_corps = url_for('corps', _external=True)
-        worksheet.update('D6', f'=HYPERLINK("{to_corps}";"TO CORPORA")', raw=False)
+        worksheet.update('B3', f'=HYPERLINK("{to_corps}";"TO CORPORA")', raw=False)
         spreadsheet.del_worksheet(spreadsheet.sheet1)
 
         insert_values_metadata(id, corp_name, sel, text, perm_id)
@@ -507,10 +507,13 @@ def edit_gsheet():
     spreadsheet.del_worksheet(spreadsheet.sheet1)
     set_with_dataframe(worksheet, df)
 
-    submit_worksheet = spreadsheet.add_worksheet('submit', rows=3, cols=3)
+    submit_worksheet = spreadsheet.add_worksheet('submit & share', rows=3, cols=6)
     submit_worksheet.update('A1', 'Submit all changes and upload them to corpus:')
     submit_link = url_for('corp_update', corp_id=corp_id, sh_id=spreadsheet.id, _external=True)
     submit_worksheet.update('B3', f'=HYPERLINK("{submit_link}";"SUBMIT")', raw=False)
+    submit_worksheet.update('D1', 'Set permissions for this corpus:')
+    share_link = url_for('perms_update', perm_id=perm_id, _external=True)
+    submit_worksheet.update('E3', f'=HYPERLINK("{share_link}";"PERMISSIONS")', raw=False)
 
     # schedule.every(1).minutes.do(corp_update, corp_id=corp_id, sh_id=spreadsheet.id, wsh_id=worksheet.id)
     # schedule.every(1).hours.do(corp_update, corp_id=corp_id, sh_id=spreadsheet.id, wsh_id=worksheet.id)
@@ -518,21 +521,21 @@ def edit_gsheet():
 
     return redirect(sh.url)
 
-@app.route('/perm_blank', methods=['post'])
-def perm_blank():
-    if request.method == 'POST':
-        corp_id = request.form.get('corp_id')
+# @app.route('/perm_blank', methods=['post'])
+# def perm_blank():
+#     if request.method == 'POST':
+#         corp_id = request.form.get('corp_id')
 
-    id = int(corp_id.split('_')[1])
-    perm_query = f'SELECT perm_id FROM languages WHERE id = {id}'
+#     id = int(corp_id.split('_')[1])
+#     perm_query = f'SELECT perm_id FROM languages WHERE id = {id}'
 
-    with engine.connect() as con:
-        perm_res = con.execute(perm_query)
+#     with engine.connect() as con:
+#         perm_res = con.execute(perm_query)
 
-    perm_id = list(perm_res)[0][0]
-    sh = gc.open_by_key(perm_id)
+#     perm_id = list(perm_res)[0][0]
+#     sh = gc.open_by_key(perm_id)
 
-    return redirect(sh.url)
+#     return redirect(sh.url)
 
 @app.route('/perms_update/<perm_id>')
 def perms_update(perm_id):
