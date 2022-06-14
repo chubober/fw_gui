@@ -75,26 +75,6 @@ def chunker(req_dict, n, sel_list):
             count = 0
     return req_dicts
 
-
-# def search_by_parameters(db_session, req_dicts):
-#     res_set = ordset()
-#     for d in req_dicts:
-#         # all_texts = list(set(x.text for x in db_session.query(DF).all() if x))
-#         # if not texts:
-#         #     texts = all_texts
-
-#         new_query = db_session.query(DF)
-
-#         records = new_query.filter(DF.text.in_(d['source']),
-#                                   func.lower(DF.clause).contains(d['word']),
-#                                   func.lower(DF.tr).contains(d['trans']),
-#                                   DF.subj.in_(d['subj']),
-#                                   DF.obj.in_(d['obj']),
-#                                   DF.verb.in_(d['verb']),
-#                                   DF.wo.in_(d['wo']),
-#                                   ).all()
-
-#         res_set.update(list(records))
 def chunker2(req_dict, text_list):
     #req_dicts = [dict() for i in range(0, len(req_dict), n)]
     req_dicts = []
